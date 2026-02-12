@@ -145,43 +145,68 @@ body {
     display: flex;
     align-items: center;
     border: 1px solid var(--border-color);
-    padding: 15px;
+    padding: 0; /* Removing padding from parent, let children handle it */
     min-height: 80px;
     background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px; /* subtle rounding */
+    overflow: hidden; /* for hover effect on content area */
+}
+
+/* Guess Content Area (Label(s)) */
+.guess-content {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    height: 100%;
+    min-height: 80px;
+    cursor: default;
     transition: background-color 0.2s;
 }
 
-.guess-widget.interactive {
+.guess-content.clickable {
     cursor: pointer;
 }
 
-.guess-widget.interactive:hover {
-    background-color: #444422; /* Slightly lighter bg */
+.guess-content.clickable:hover {
+    background-color: rgba(229, 254, 255, 0.1); /* Hover effect */
 }
 
 .guess-widget.verified-widget {
     border-color: var(--fg-color);
-    background-color: #222211; /* Slightly darker */
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
-.widget-left {
+.widget-left .guess-content {
     justify-content: flex-end;
+    text-align: right;
 }
 
-.widget-right {
+.widget-right .guess-content {
     justify-content: flex-start;
+    text-align: left;
 }
 
 .guess-label {
-    margin: 0 10px;
-    font-size: 1.1rem;
-    white-space: pre-wrap; /* allow wrapping */
+    margin: 0 5px;
+    font-size: 1.2rem;
+    white-space: pre-wrap;
+    line-height: 1.4;
 }
 
 .check-btn {
-    margin: 0 10px;
-    padding: 5px 10px;
-    font-size: 0.9rem;
+    margin: 0 15px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 1px solid var(--fg-color);
+    border-radius: 4px;
+}
+
+.check-btn:hover:not(:disabled) {
+    background-color: var(--fg-color);
+    color: var(--bg-color);
 }
 
 .info-container {

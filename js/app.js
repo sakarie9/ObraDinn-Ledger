@@ -265,6 +265,10 @@ const App = {
         const container = document.createElement('div');
         container.className = 'guess-widget';
 
+        // 1. Content Area (Clickable)
+        const contentArea = document.createElement('div');
+        contentArea.className = 'guess-content';
+
         let displayText = '不详';
         if (state.guessed_id) {
             const crew = App.data.crew.find(c => c.id === state.guessed_id);
@@ -274,17 +278,23 @@ const App = {
         const label = document.createElement('div');
         label.className = `guess-label ${state.status === 'verified' ? 'verified-text' : 'handwriting-text'}`;
         label.textContent = displayText;
+        contentArea.appendChild(label);
 
-        container.appendChild(label);
+        container.appendChild(contentArea);
 
         if (state.status !== 'verified') {
-            container.classList.add('interactive');
-            label.onclick = () => App.openCrewSelector(filename, 'identity');
+            // Bind click to the entire content area
+            contentArea.classList.add('clickable');
+            contentArea.onclick = () => App.openCrewSelector(filename, 'identity');
 
+            // 2. Action Area (Button)
             const checkBtn = document.createElement('button');
             checkBtn.textContent = '查验';
-            checkBtn.className = 'nav-btn check-btn';
-            checkBtn.onclick = () => App.checkIdentity(filename);
+            checkBtn.className = 'check-btn'; // Use specific class, remove generic 'nav-btn' if styled separately or keep for base
+            checkBtn.onclick = (e) => {
+                e.stopPropagation(); // Prevent triggering widget click if nested (though here they are siblings)
+                App.checkIdentity(filename);
+            };
             container.appendChild(checkBtn);
         } else {
              container.classList.add('verified-widget');
@@ -296,6 +306,10 @@ const App = {
     createFateWidget: (filename, state) => {
         const container = document.createElement('div');
         container.className = 'guess-widget';
+
+        // 1. Content Area (Clickable)
+        const contentArea = document.createElement('div');
+        contentArea.className = 'guess-content';
 
         const guess = state.guessed_fate;
         const causeObj = App.data.fatesStructure.find(c => c.id === guess.cause_id);
@@ -314,7 +328,7 @@ const App = {
         const label1 = document.createElement('div');
         label1.className = `guess-label ${state.fate_status === 'verified' ? 'verified-text' : 'handwriting-text'}`;
         label1.textContent = part1Text;
-        container.appendChild(label1);
+        contentArea.appendChild(label1);
 
         if (causeObj && causeObj.requires_offender) {
             let offName = '不详';
@@ -331,21 +345,25 @@ const App = {
             label2.textContent = offName;
 
             if (state.fate_status !== 'verified') {
-                label2.onclick = () => App.openCrewSelector(filename, 'offender');
+                // If special handling needed for second label click (offender selector)
+                // We can bind specific click to this label, stopping propagation to contentArea
+                label2.onclick = (e) => {
+                    e.stopPropagation();
+                    App.openCrewSelector(filename, 'offender');
+                };
                 label2.style.cursor = 'pointer';
+                label2.style.textDecoration = 'underline'; // Optional: visual cue
             }
-            container.appendChild(label2);
+            contentArea.appendChild(label2);
         }
 
+        container.appendChild(contentArea);
+
         if (state.fate_status !== 'verified') {
-            if (causeObj) { // Only clickable if we have some structure, though 'Unknown' is default
-                 label1.onclick = () => App.openFateSelector(filename);
-                 label1.style.cursor = 'pointer';
-            } else {
-                 // Default initial state click
-                 label1.onclick = () => App.openFateSelector(filename);
-                 label1.style.cursor = 'pointer';
-            }
+            // Bind main click (Fate Selector) to content area
+            // Note: If clicking label2 (offender), it stops propagation so this won't fire.
+            contentArea.classList.add('clickable');
+            contentArea.onclick = () => App.openFateSelector(filename);
 
             // Check if complete
             let isComplete = false;
@@ -359,11 +377,13 @@ const App = {
 
             const checkBtn = document.createElement('button');
             checkBtn.textContent = '查验';
-            checkBtn.className = 'nav-btn check-btn';
+            checkBtn.className = 'check-btn';
             checkBtn.disabled = !isComplete;
-            checkBtn.onclick = () => App.checkFate(filename);
+            checkBtn.onclick = (e) => {
+                e.stopPropagation();
+                App.checkFate(filename);
+            };
             container.appendChild(checkBtn);
-             container.classList.add('interactive');
         } else {
             container.classList.add('verified-widget');
         }
