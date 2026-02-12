@@ -2,7 +2,7 @@
     --bg-color: #333319;
     --fg-color: #E5FEFF;
     --border-color: #AAAA88;
-    --font-en: 'IM Fell English', serif;
+    --font-en: 'Crimson Text', serif; /* Changed from IM Fell English for better readability */
     --font-cn: 'Noto Serif SC', serif;
     --font-hand: 'Ma Shan Zheng', cursive;
 }
@@ -33,18 +33,21 @@ body {
 
 /* --- Buttons --- */
 .nav-btn {
-    background-color: var(--fg-color);
-    color: var(--bg-color);
-    border: 1px solid var(--bg-color);
-    padding: 10px 20px;
+    background-color: transparent;
+    color: var(--fg-color);
+    border: 1px solid var(--fg-color);
+    padding: 12px 24px;
     font-family: var(--font-cn);
-    font-size: 1rem;
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
+    transition: all 0.2s ease;
+    border-radius: 2px;
 }
 
 .nav-btn:hover {
-    background-color: #C0D8D9; /* slightly darker fg */
+    background-color: var(--fg-color);
+    color: var(--bg-color);
+    box-shadow: 0 0 10px rgba(229, 254, 255, 0.2);
 }
 
 .nav-btn:active {
@@ -88,6 +91,8 @@ body {
 
 .grid-item img:hover {
     transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(229, 254, 255, 0.3);
+    border: 1px solid var(--fg-color);
 }
 
 .nav-footer {
@@ -128,9 +133,11 @@ body {
 }
 
 .detail-image-container img {
-    max-height: 250px;
+    max-height: 300px;
     width: auto;
-    border: 2px solid transparent; /* Placeholder for potential border */
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .guess-widget {
@@ -138,9 +145,10 @@ body {
     display: flex;
     align-items: center;
     border: 1px solid var(--border-color);
-    padding: 10px;
-    min-height: 60px;
-    background-color: var(--bg-color);
+    padding: 15px;
+    min-height: 80px;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s;
 }
 
 .guess-widget.interactive {
