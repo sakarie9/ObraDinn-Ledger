@@ -542,15 +542,19 @@ const App = {
 
          const count = state[type];
 
-         // Generate new HTML for content
-         let textHTML = '';
-         for (let i = 0; i < count; i++) {
+         // Only append new hints instead of replacing all
+         const currentChildren = contentEl.children.length;
+
+         for (let i = currentChildren; i < count; i++) {
              if (i < allHints.length) {
-                 if (i > 0) textHTML += '<br><br>';
-                 textHTML += App.processMixedText(allHints[i]);
+                 const p = document.createElement('div');
+                 p.className = 'hint-block';
+                 p.innerHTML = App.processMixedText(allHints[i]);
+                 contentEl.appendChild(p);
+                 // Auto-scroll to bottom
+                 contentEl.scrollTop = contentEl.scrollHeight;
              }
          }
-         contentEl.innerHTML = textHTML;
 
          // Check if we reached the end
          if (count >= allHints.length) {

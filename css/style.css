@@ -20,6 +20,7 @@ body {
 
 * {
     box-sizing: border-box;
+    font-family: var(--font-cn); /* Default font for everything */
 }
 
 #app-container {
@@ -31,8 +32,8 @@ body {
 /* --- Common Text Styles --- */
 .en-text { font-family: var(--font-en); }
 .cn-text { font-family: var(--font-cn); }
-.handwriting-text { font-family: var(--font-hand); font-size: 1.2em; }
-.verified-text { font-family: var(--font-cn); font-weight: bold; }
+.handwriting-text { font-family: var(--font-hand); font-size: 1.3em; letter-spacing: 1px; }
+.verified-text { font-family: var(--font-cn); font-weight: bold; letter-spacing: 0.5px; }
 
 /* --- Buttons --- */
 .nav-btn {
@@ -271,6 +272,11 @@ body {
 
     scrollbar-width: thin;
     scrollbar-color: var(--fg-color) transparent;
+}
+
+.hint-block {
+    margin-bottom: 15px;
+    font-family: var(--font-cn); /* Ensure book font */
 }
 
 .hint-content::-webkit-scrollbar {
