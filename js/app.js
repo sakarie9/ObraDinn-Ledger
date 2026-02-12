@@ -374,6 +374,8 @@ const App = {
     createHintColumn: (filename, type, hints, state) => {
         const col = document.createElement('div');
         col.className = 'hint-column';
+        // Add ID for targeted updates
+        col.id = `hint-column-${type}`;
 
         const title = document.createElement('div');
         title.className = 'hint-title';
@@ -382,6 +384,7 @@ const App = {
 
         const content = document.createElement('div');
         content.className = 'hint-content';
+        content.id = `hint-content-${type}`;
 
         const count = state[type];
         // Handle hints array: default fallback if empty
@@ -401,6 +404,7 @@ const App = {
             const btn = document.createElement('button');
             btn.textContent = '获取新提示';
             btn.className = 'nav-btn hint-btn';
+            btn.id = `hint-btn-${type}`;
             btn.onclick = () => App.revealHint(filename, type, effectiveHints);
             col.appendChild(btn);
         } else {
@@ -447,6 +451,8 @@ const App = {
         const state = App.state.hintsUsed[filename];
         state[type]++;
 
+        let autoLockTriggered = false;
+
         // Auto-lock logic
         if (type === 'identity') {
             if (state[type] >= allHints.length && state.status !== 'verified') {
@@ -454,6 +460,7 @@ const App = {
                 if (correctId) {
                     state.guessed_id = correctId;
                     state.status = 'verified';
+                    autoLockTriggered = true;
                 }
             }
         } else if (type === 'fate') {
@@ -470,13 +477,59 @@ const App = {
                              offender_id: correctFate.offender_id
                          };
                          state.fate_status = 'verified';
+                         autoLockTriggered = true;
                     }
                 }
             }
         }
 
         App.saveState();
-        App.render();
+
+        if (autoLockTriggered) {
+             // If auto-lock happened, we need a full render to update the widget styling and everything
+             App.render();
+        } else {
+             // Otherwise, just update the hint text in place to avoid jarring refresh
+             // Check if we are in detail view and looking at the correct file
+             if (App.state.view === 'detail' && App.state.currentFace === filename) {
+                 App.updateHintColumnDOM(filename, type, allHints, state);
+             } else {
+                 // Fallback
+                 App.render();
+             }
+        }
+    },
+
+    updateHintColumnDOM: (filename, type, allHints, state) => {
+         const contentEl = document.getElementById(`hint-content-${type}`);
+         const btnEl = document.getElementById(`hint-btn-${type}`);
+         const colEl = document.getElementById(`hint-column-${type}`);
+
+         if (!contentEl || !colEl) return;
+
+         const count = state[type];
+
+         // Generate new HTML for content
+         let textHTML = '';
+         for (let i = 0; i < count; i++) {
+             if (i < allHints.length) {
+                 if (i > 0) textHTML += '<br><br>';
+                 textHTML += App.processMixedText(allHints[i]);
+             }
+         }
+         contentEl.innerHTML = textHTML;
+
+         // Check if we reached the end
+         if (count >= allHints.length) {
+             if (btnEl) btnEl.remove();
+             // Append "Done" if not exists
+             if (!colEl.querySelector('.hint-done')) {
+                const done = document.createElement('div');
+                done.className = 'hint-done';
+                done.textContent = '已显示所有提示';
+                colEl.appendChild(done);
+             }
+         }
     },
 
     checkIdentity: (filename) => {
