@@ -200,8 +200,11 @@ body {
     font-size: 1rem;
     white-space: nowrap;
     background-color: transparent;
+    color: var(--fg-color);
     border: 1px solid var(--fg-color);
     border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .check-btn:hover:not(:disabled) {
