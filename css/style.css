@@ -18,11 +18,14 @@ body {
     min-height: 100vh;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 #app-container {
     width: 100%;
     max-width: 1200px;
     padding: 20px;
-    box-sizing: border-box;
 }
 
 /* --- Common Text Styles --- */
@@ -215,7 +218,8 @@ body {
 .info-container {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 30px;
+    gap: 30px;
 }
 
 .hint-column {
@@ -223,38 +227,93 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 450px;
+
+    /* Card Style */
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .separator {
-    width: 2px;
-    background-color: var(--fg-color);
-    margin: 0 40px;
+    display: none; /* Removed separator in favor of gap */
+}
+
+.hint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    min-height: 50px;
 }
 
 .hint-title {
     font-family: var(--font-cn);
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+    font-size: 1.6rem;
     font-weight: bold;
+    margin: 0;
 }
 
 .hint-content {
     width: 100%;
-    text-align: center;
+    text-align: left;
     font-size: 1.1rem;
-    line-height: 1.6;
+    line-height: 1.8;
     margin-bottom: 20px;
-    min-height: 100px;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 10px;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--fg-color) transparent;
+}
+
+.hint-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.hint-content::-webkit-scrollbar-thumb {
+    background-color: var(--fg-color);
+    border-radius: 3px;
+}
+
+.hint-content::-webkit-scrollbar-track {
+    background-color: transparent;
 }
 
 .hint-btn {
-    margin-top: auto;
+    margin: 0;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border-radius: 4px;
 }
 
-.hint-done {
+.hint-done-badge {
+    background-color: var(--fg-color);
+    color: var(--bg-color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.hint-done-msg {
     margin-top: auto;
     font-style: italic;
     color: #AAAA88;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid rgba(170, 170, 136, 0.3);
 }
 
 /* --- Modal --- */

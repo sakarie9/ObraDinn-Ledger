@@ -394,21 +394,41 @@ const App = {
     createHintColumn: (filename, type, hints, state) => {
         const col = document.createElement('div');
         col.className = 'hint-column';
-        // Add ID for targeted updates
         col.id = `hint-column-${type}`;
+
+        // Header (Title + Button)
+        const header = document.createElement('div');
+        header.className = 'hint-header';
 
         const title = document.createElement('div');
         title.className = 'hint-title';
         title.textContent = type === 'identity' ? '身份' : '下落';
-        col.appendChild(title);
-
-        const content = document.createElement('div');
-        content.className = 'hint-content';
-        content.id = `hint-content-${type}`;
+        header.appendChild(title);
 
         const count = state[type];
         // Handle hints array: default fallback if empty
         const effectiveHints = (hints && hints.length > 0) ? hints : [`未记录${type === 'identity' ? '身份' : '下落'}`];
+
+        // Button in Header
+        if (count < effectiveHints.length) {
+            const btn = document.createElement('button');
+            btn.textContent = '获取提示'; // Shortened text
+            btn.className = 'nav-btn hint-btn';
+            btn.id = `hint-btn-${type}`;
+            btn.onclick = () => App.revealHint(filename, type, effectiveHints);
+            header.appendChild(btn);
+        } else {
+            const done = document.createElement('div');
+            done.className = 'hint-done-badge';
+            done.textContent = '✓';
+            header.appendChild(done);
+        }
+        col.appendChild(header);
+
+        // Content
+        const content = document.createElement('div');
+        content.className = 'hint-content';
+        content.id = `hint-content-${type}`;
 
         let textHTML = '';
         for (let i = 0; i < count; i++) {
@@ -420,18 +440,11 @@ const App = {
         content.innerHTML = textHTML;
         col.appendChild(content);
 
-        if (count < effectiveHints.length) {
-            const btn = document.createElement('button');
-            btn.textContent = '获取新提示';
-            btn.className = 'nav-btn hint-btn';
-            btn.id = `hint-btn-${type}`;
-            btn.onclick = () => App.revealHint(filename, type, effectiveHints);
-            col.appendChild(btn);
-        } else {
-            const done = document.createElement('div');
-            done.className = 'hint-done';
-            done.textContent = '已显示所有提示';
-            col.appendChild(done);
+        if (count >= effectiveHints.length) {
+             const doneMsg = document.createElement('div');
+             doneMsg.className = 'hint-done-msg';
+             doneMsg.textContent = '已显示所有提示';
+             col.appendChild(doneMsg);
         }
 
         return col;
@@ -541,13 +554,21 @@ const App = {
 
          // Check if we reached the end
          if (count >= allHints.length) {
-             if (btnEl) btnEl.remove();
-             // Append "Done" if not exists
-             if (!colEl.querySelector('.hint-done')) {
-                const done = document.createElement('div');
-                done.className = 'hint-done';
-                done.textContent = '已显示所有提示';
-                colEl.appendChild(done);
+             if (btnEl) {
+                 const header = btnEl.parentElement;
+                 btnEl.remove();
+
+                 const done = document.createElement('div');
+                 done.className = 'hint-done-badge';
+                 done.textContent = '✓';
+                 header.appendChild(done);
+             }
+
+             if (!colEl.querySelector('.hint-done-msg')) {
+                const doneMsg = document.createElement('div');
+                doneMsg.className = 'hint-done-msg';
+                doneMsg.textContent = '已显示所有提示';
+                colEl.appendChild(doneMsg);
              }
          }
     },
