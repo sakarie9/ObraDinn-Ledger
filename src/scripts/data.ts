@@ -1,6 +1,5 @@
-import type { FaceData, CrewMember, FateStructure, CorrectFate } from "./types";
+import type { CrewMember, FateStructure, CorrectFate } from "./types";
 
-let facesCache: Record<string, FaceData> | null = null;
 let crewCache: CrewMember[] | null = null;
 let correctNamesCache: Record<string, number> | null = null;
 let correctFatesCache: Record<string, CorrectFate | CorrectFate[]> | null =
@@ -8,20 +7,19 @@ let correctFatesCache: Record<string, CorrectFate | CorrectFate[]> | null =
 let fatesStructureCache: FateStructure[] | null = null;
 
 export async function loadData() {
-  if (facesCache) return;
+  if (crewCache) return; // 改为检查 crewCache 而不是 facesCache
 
   const base = import.meta.env.BASE_URL;
   try {
-    const [faces, crew, correctNames, correctFates, fatesStructure] =
+    const [crew, correctNames, correctFates, fatesStructure] =
       await Promise.all([
-        fetch(`${base}/data/faces_data.json`).then((r) => r.json()),
+        // faces 数据不再需要，当前面部的数据已经通过 data-hints 内联了
         fetch(`${base}/data/name_lists.json`).then((r) => r.json()),
         fetch(`${base}/data/correct_name_list.json`).then((r) => r.json()),
         fetch(`${base}/data/correct_fates_list.json`).then((r) => r.json()),
         fetch(`${base}/data/fates_structure.json`).then((r) => r.json()),
       ]);
 
-    facesCache = faces;
     crewCache = crew;
     correctNamesCache = correctNames;
     correctFatesCache = correctFates;
@@ -31,9 +29,6 @@ export async function loadData() {
   }
 }
 
-export function getFaces() {
-  return facesCache;
-}
 export function getCrew() {
   return crewCache;
 }
