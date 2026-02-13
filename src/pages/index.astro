@@ -36,11 +36,15 @@ const faces = Array.from({ length: 60 }, (_, i) => {
             class="block aspect-square relative"
             data-face={face}
           >
-            <div class="face-card">
+            <div class="face-card loading">
+              <div class="face-card-loader">
+                <div class="face-card-spinner" />
+              </div>
               <img
                 src={`${import.meta.env.BASE_URL}/FacesHi/${face}`}
                 alt={`Face ${index + 1}`}
                 loading="lazy"
+                class="face-card-img"
               />
             </div>
             <div class="face-check" aria-hidden="true">
@@ -128,6 +132,29 @@ const faces = Array.from({ length: 60 }, (_, i) => {
   });
 
   document.addEventListener("astro:page-load", () => {
+    // Handle individual image loading
+    const images = document.querySelectorAll(".face-card-img");
+
+    images.forEach((img) => {
+      if (img instanceof HTMLImageElement) {
+        const card = img.closest(".face-card");
+
+        const handleLoad = () => {
+          if (card) {
+            card.classList.remove("loading");
+            card.classList.add("loaded");
+          }
+        };
+
+        if (img.complete) {
+          handleLoad();
+        } else {
+          img.addEventListener("load", handleLoad);
+          img.addEventListener("error", handleLoad); // Handle errors gracefully
+        }
+      }
+    });
+
     // Reset button
     const resetBtn = document.getElementById("reset-btn");
     if (resetBtn && !resetBtn.hasAttribute("data-listener-attached")) {

@@ -816,6 +816,10 @@ const preloadText = [
         for (let i = start; i < count && i < allHints.length; i++) {
           const div = document.createElement("div");
           div.className = "font-cn";
+          // Add animation class for new hints when user clicks hint button
+          if (shouldScroll) {
+            div.classList.add("hint-item-new");
+          }
           this.buildMixedTextNodes(div, allHints[i]);
           fragment.appendChild(div);
         }
