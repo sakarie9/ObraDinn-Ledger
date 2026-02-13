@@ -79,7 +79,7 @@ const hintsData = JSON.stringify({
               </button>
               <div id="identity-hint-done" class="hidden bg-[var(--color-fg-main)] text-[var(--color-bg-main)] rounded-full w-6 h-6 flex items-center justify-center font-bold">✓</div>
             </div>
-            <div id="identity-hint-list" class="flex-grow overflow-y-auto pr-2 space-y-4 text-lg leading-relaxed scrollbar-thin scrollbar-thumb-[var(--color-fg-main)] scrollbar-track-transparent">
+            <div id="identity-hint-list" class="flex-grow overflow-y-auto pr-2 flex flex-col gap-4 text-lg leading-relaxed scrollbar-thin scrollbar-thumb-[var(--color-fg-main)] scrollbar-track-transparent">
               <!-- Hints injected here -->
             </div>
             <div id="identity-hint-msg" class="hidden text-center text-[#AAAA88] italic border-t border-[#AAAA88]/30 pt-2 mt-2">
@@ -96,7 +96,7 @@ const hintsData = JSON.stringify({
               </button>
               <div id="fate-hint-done" class="hidden bg-[var(--color-fg-main)] text-[var(--color-bg-main)] rounded-full w-6 h-6 flex items-center justify-center font-bold">✓</div>
             </div>
-            <div id="fate-hint-list" class="flex-grow overflow-y-auto pr-2 space-y-4 text-lg leading-relaxed scrollbar-thin scrollbar-thumb-[var(--color-fg-main)] scrollbar-track-transparent">
+            <div id="fate-hint-list" class="flex-grow overflow-y-auto pr-2 flex flex-col gap-4 text-lg leading-relaxed scrollbar-thin scrollbar-thumb-[var(--color-fg-main)] scrollbar-track-transparent">
                <!-- Hints injected here -->
             </div>
              <div id="fate-hint-msg" class="hidden text-center text-[#AAAA88] italic border-t border-[#AAAA88]/30 pt-2 mt-2">
@@ -595,16 +595,22 @@ const hintsData = JSON.stringify({
           }
 
           if (listEl.childElementCount < count) {
+              const fragment = document.createDocumentFragment();
+              let added = false;
               for (let i = listEl.childElementCount; i < count; i++) {
                   if (i < allHints.length) {
                       const div = document.createElement('div');
                       div.className = 'font-cn';
                       div.innerHTML = this.processMixedText(allHints[i]);
-                      listEl.appendChild(div);
+                      fragment.appendChild(div);
+                      added = true;
                   }
               }
-              // Only scroll if we added something
-              listEl.scrollTop = listEl.scrollHeight;
+              if (added) {
+                  listEl.appendChild(fragment);
+                  // Only scroll if we added something
+                  listEl.scrollTop = listEl.scrollHeight;
+              }
           } else if (listEl.childElementCount > count) {
               // Handle reduction (e.g. reset)
               while (listEl.childElementCount > count) {
