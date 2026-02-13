@@ -21,665 +21,709 @@ export async function getStaticPaths() {
 
 const { id } = Astro.params;
 const { filename, faceData } = Astro.props;
+const hintsData = JSON.stringify({
+    identity_hints: faceData.identity_hints,
+    fate_hints: faceData.fate_hints
+});
 ---
 
 <Layout title={`No. ${id} - 奥伯拉丁的回归`}>
-  <div class="flex flex-col gap-5 max-w-5xl mx-auto" data-filename={filename}>
-    <!-- Top Bar -->
-    <div>
-      <a href="/" class="inline-block border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] transition-colors rounded-sm">
-        &lt;&lt; 返回列表
-      </a>
-    </div>
-
-    <!-- Main Interaction Area -->
-    <div class="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-10 py-5 relative">
-
-      <!-- Identity Widget -->
-      <div id="identity-widget" class="w-full md:w-1/3 min-h-[80px] border border-[var(--color-border-main)] rounded bg-black/20 flex items-center relative group select-none">
-        <div class="flex-grow p-4 text-right cursor-pointer hover:bg-[var(--color-fg-main)]/10 transition-colors h-full flex items-center justify-end" id="identity-content">
-           <span class="text-xl font-hand" id="identity-label">不详</span>
+  <face-interaction data-filename={filename} data-hints={hintsData}>
+      <div class="flex flex-col gap-5 max-w-5xl mx-auto">
+        <!-- Top Bar -->
+        <div>
+          <a href="/" class="inline-block border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] transition-colors rounded-sm">
+            &lt;&lt; 返回列表
+          </a>
         </div>
-        <button id="identity-check-btn" class="mx-3 px-3 py-1 border border-[var(--color-fg-main)] rounded hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] text-sm transition-colors hidden">
-          查验
-        </button>
+
+        <!-- Main Interaction Area -->
+        <div class="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-10 py-5 relative">
+
+          <!-- Identity Widget -->
+          <div id="identity-widget" class="w-full md:w-1/3 min-h-[80px] border border-[var(--color-border-main)] rounded bg-black/20 flex items-center relative group select-none">
+            <div class="flex-grow p-4 text-right cursor-pointer hover:bg-[var(--color-fg-main)]/10 transition-colors h-full flex items-center justify-end" id="identity-content">
+               <span class="text-xl font-hand" id="identity-label">不详</span>
+            </div>
+            <button id="identity-check-btn" class="mx-3 px-3 py-1 border border-[var(--color-fg-main)] rounded hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] text-sm transition-colors hidden">
+              查验
+            </button>
+          </div>
+
+          <!-- Image -->
+          <div class="flex-shrink-0 relative">
+             <img src={`/FacesHi/${filename}`} alt={filename} class="max-h-[300px] w-auto border border-[var(--color-border-main)] p-2 bg-black/20" />
+          </div>
+
+          <!-- Fate Widget -->
+          <div id="fate-widget" class="w-full md:w-1/3 min-h-[80px] border border-[var(--color-border-main)] rounded bg-black/20 flex items-center relative group select-none">
+            <div class="flex-grow p-4 text-left cursor-pointer hover:bg-[var(--color-fg-main)]/10 transition-colors h-full flex items-center justify-start" id="fate-content">
+               <span class="text-xl font-hand" id="fate-label">未记录下落</span>
+            </div>
+            <button id="fate-check-btn" class="mx-3 px-3 py-1 border border-[var(--color-fg-main)] rounded hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] text-sm transition-colors hidden" disabled>
+              查验
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Hints Area -->
+        <div class="flex flex-col md:flex-row gap-8 mt-8">
+
+          <!-- Identity Hints -->
+          <div class="flex-1 bg-black/20 border border-[var(--color-border-main)] rounded-lg p-5 shadow-lg flex flex-col h-[450px]">
+            <div class="flex justify-between items-center border-b border-[var(--color-border-main)] pb-3 mb-4 min-h-[50px]">
+              <h2 class="text-2xl font-bold font-cn">身份</h2>
+              <button id="identity-hint-btn" class="border border-[var(--color-fg-main)] px-3 py-1 rounded text-sm hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] transition-colors">
+                获取提示
+              </button>
+              <div id="identity-hint-done" class="hidden bg-[var(--color-fg-main)] text-[var(--color-bg-main)] rounded-full w-6 h-6 flex items-center justify-center font-bold">✓</div>
+            </div>
+            <div id="identity-hint-list" class="flex-grow overflow-y-auto pr-2 space-y-4 text-lg leading-relaxed scrollbar-thin scrollbar-thumb-[var(--color-fg-main)] scrollbar-track-transparent">
+              <!-- Hints injected here -->
+            </div>
+            <div id="identity-hint-msg" class="hidden text-center text-[#AAAA88] italic border-t border-[#AAAA88]/30 pt-2 mt-2">
+                已显示所有提示
+            </div>
+          </div>
+
+          <!-- Fate Hints -->
+          <div class="flex-1 bg-black/20 border border-[var(--color-border-main)] rounded-lg p-5 shadow-lg flex flex-col h-[450px]">
+            <div class="flex justify-between items-center border-b border-[var(--color-border-main)] pb-3 mb-4 min-h-[50px]">
+              <h2 class="text-2xl font-bold font-cn">下落</h2>
+              <button id="fate-hint-btn" class="border border-[var(--color-fg-main)] px-3 py-1 rounded text-sm hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] transition-colors">
+                获取提示
+              </button>
+              <div id="fate-hint-done" class="hidden bg-[var(--color-fg-main)] text-[var(--color-bg-main)] rounded-full w-6 h-6 flex items-center justify-center font-bold">✓</div>
+            </div>
+            <div id="fate-hint-list" class="flex-grow overflow-y-auto pr-2 space-y-4 text-lg leading-relaxed scrollbar-thin scrollbar-thumb-[var(--color-fg-main)] scrollbar-track-transparent">
+               <!-- Hints injected here -->
+            </div>
+             <div id="fate-hint-msg" class="hidden text-center text-[#AAAA88] italic border-t border-[#AAAA88]/30 pt-2 mt-2">
+                已显示所有提示
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
-      <!-- Image -->
-      <div class="flex-shrink-0 relative">
-         <img src={`/FacesHi/${filename}`} alt={filename} class="max-h-[300px] w-auto border border-[var(--color-border-main)] p-2 bg-black/20" />
-      </div>
-
-      <!-- Fate Widget -->
-      <div id="fate-widget" class="w-full md:w-1/3 min-h-[80px] border border-[var(--color-border-main)] rounded bg-black/20 flex items-center relative group select-none">
-        <div class="flex-grow p-4 text-left cursor-pointer hover:bg-[var(--color-fg-main)]/10 transition-colors h-full flex items-center justify-start" id="fate-content">
-           <span class="text-xl font-hand" id="fate-label">未记录下落</span>
-        </div>
-        <button id="fate-check-btn" class="mx-3 px-3 py-1 border border-[var(--color-fg-main)] rounded hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] text-sm transition-colors hidden" disabled>
-          查验
-        </button>
-      </div>
-
-    </div>
-
-    <!-- Hints Area -->
-    <div class="flex flex-col md:flex-row gap-8 mt-8">
-
-      <!-- Identity Hints -->
-      <div class="flex-1 bg-black/20 border border-[var(--color-border-main)] rounded-lg p-5 shadow-lg flex flex-col h-[450px]">
-        <div class="flex justify-between items-center border-b border-[var(--color-border-main)] pb-3 mb-4 min-h-[50px]">
-          <h2 class="text-2xl font-bold font-cn">身份</h2>
-          <button id="identity-hint-btn" class="border border-[var(--color-fg-main)] px-3 py-1 rounded text-sm hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] transition-colors">
-            获取提示
-          </button>
-          <div id="identity-hint-done" class="hidden bg-[var(--color-fg-main)] text-[var(--color-bg-main)] rounded-full w-6 h-6 flex items-center justify-center font-bold">✓</div>
-        </div>
-        <div id="identity-hint-list" class="flex-grow overflow-y-auto pr-2 space-y-4 text-lg leading-relaxed scrollbar-thin scrollbar-thumb-[var(--color-fg-main)] scrollbar-track-transparent">
-          <!-- Hints injected here -->
-        </div>
-        <div id="identity-hint-msg" class="hidden text-center text-[#AAAA88] italic border-t border-[#AAAA88]/30 pt-2 mt-2">
-            已显示所有提示
-        </div>
-      </div>
-
-      <!-- Fate Hints -->
-      <div class="flex-1 bg-black/20 border border-[var(--color-border-main)] rounded-lg p-5 shadow-lg flex flex-col h-[450px]">
-        <div class="flex justify-between items-center border-b border-[var(--color-border-main)] pb-3 mb-4 min-h-[50px]">
-          <h2 class="text-2xl font-bold font-cn">下落</h2>
-          <button id="fate-hint-btn" class="border border-[var(--color-fg-main)] px-3 py-1 rounded text-sm hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] transition-colors">
-            获取提示
-          </button>
-          <div id="fate-hint-done" class="hidden bg-[var(--color-fg-main)] text-[var(--color-bg-main)] rounded-full w-6 h-6 flex items-center justify-center font-bold">✓</div>
-        </div>
-        <div id="fate-hint-list" class="flex-grow overflow-y-auto pr-2 space-y-4 text-lg leading-relaxed scrollbar-thin scrollbar-thumb-[var(--color-fg-main)] scrollbar-track-transparent">
-           <!-- Hints injected here -->
-        </div>
-         <div id="fate-hint-msg" class="hidden text-center text-[#AAAA88] italic border-t border-[#AAAA88]/30 pt-2 mt-2">
-            已显示所有提示
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- Modals (Hidden by default) -->
-  <dialog id="crew-modal" class="bg-[var(--color-bg-main)] text-[var(--color-fg-main)] border-2 border-[var(--color-border-main)] p-0 w-[90%] max-w-[800px] max-h-[90vh] backdrop:bg-black/80">
-      <div class="p-6 h-full flex flex-col">
-          <h2 id="crew-modal-title" class="text-2xl font-bold mb-4">选择船员</h2>
-          <div class="flex flex-col md:flex-row gap-4 flex-1 min-h-0">
-             <div id="crew-sidebar" class="hidden md:flex flex-col w-[150px] border-r border-[var(--color-border-main)] pr-4">
-                 <h3 class="font-bold mb-2">特殊</h3>
-                 <button class="text-left py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] px-2" data-special-id="-1">敌人</button>
-                 <button class="text-left py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] px-2" data-special-id="-2">野兽</button>
-             </div>
-             <div class="flex-1 flex flex-col min-h-0">
-                 <div class="grid grid-cols-[50px_1fr_100px_1fr] font-bold border-b border-[var(--color-border-main)] pb-2 mb-2 text-sm md:text-base">
-                     <span>编号</span><span>姓名</span><span>身份</span><span>籍贯</span>
+      <!-- Modals (Hidden by default) -->
+      <dialog id="crew-modal" class="m-auto bg-[var(--color-bg-main)] text-[var(--color-fg-main)] border-2 border-[var(--color-border-main)] p-0 w-[90%] max-w-[800px] max-h-[90vh] backdrop:bg-black/80">
+          <div class="p-6 h-full flex flex-col">
+              <h2 id="crew-modal-title" class="text-2xl font-bold mb-4">选择船员</h2>
+              <div class="flex flex-col md:flex-row gap-4 flex-1 min-h-0">
+                 <div id="crew-sidebar" class="hidden md:flex flex-col w-[150px] border-r border-[var(--color-border-main)] pr-4">
+                     <h3 class="font-bold mb-2">特殊</h3>
+                     <button class="text-left py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] px-2" data-special-id="-1">敌人</button>
+                     <button class="text-left py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] px-2" data-special-id="-2">野兽</button>
                  </div>
-                 <div id="crew-list" class="flex-1 overflow-y-auto min-h-0">
-                     <!-- Crew items -->
+                 <div class="flex-1 flex flex-col min-h-0">
+                     <div class="grid grid-cols-[50px_1fr_100px_1fr] font-bold border-b border-[var(--color-border-main)] pb-2 mb-2 text-sm md:text-base">
+                         <span>编号</span><span>姓名</span><span>身份</span><span>籍贯</span>
+                     </div>
+                     <div id="crew-list" class="flex-1 overflow-y-auto min-h-0">
+                         <!-- Crew items -->
+                     </div>
                  </div>
-             </div>
+              </div>
+              <div class="flex justify-center gap-4 mt-4 pt-4 border-t border-[var(--color-border-main)]">
+                  <button id="crew-prev" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)]">&lt;&lt;</button>
+                  <span id="crew-page-info" class="self-center font-en">1 / 1</span>
+                  <button id="crew-next" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)]">&gt;&gt;</button>
+                  <button id="crew-cancel" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] ml-4">取消</button>
+              </div>
           </div>
-          <div class="flex justify-center gap-4 mt-4 pt-4 border-t border-[var(--color-border-main)]">
-              <button id="crew-prev" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)]">&lt;&lt;</button>
-              <span id="crew-page-info" class="self-center font-en">1 / 1</span>
-              <button id="crew-next" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)]">&gt;&gt;</button>
-              <button id="crew-cancel" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] ml-4">取消</button>
-          </div>
-      </div>
-  </dialog>
+      </dialog>
 
-  <dialog id="fate-modal" class="bg-[var(--color-bg-main)] text-[var(--color-fg-main)] border-2 border-[var(--color-border-main)] p-6 w-[90%] max-w-[800px] max-h-[90vh] backdrop:bg-black/80">
-       <div class="h-full flex flex-col">
-          <h2 id="fate-modal-title" class="text-2xl font-bold mb-4">选择死因</h2>
-          <div id="fate-list" class="grid grid-cols-2 md:grid-cols-3 gap-4 flex-1 overflow-y-auto content-start">
-              <!-- Fate items -->
-          </div>
-          <div class="flex justify-center gap-4 mt-4 pt-4 border-t border-[var(--color-border-main)]">
-              <button id="fate-prev" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)]">&lt;&lt;</button>
-              <span id="fate-page-info" class="self-center font-en">1 / 1</span>
-              <button id="fate-next" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)]">&gt;&gt;</button>
-              <button id="fate-cancel" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] ml-4">取消</button>
-          </div>
-       </div>
-  </dialog>
-
+      <dialog id="fate-modal" class="m-auto bg-[var(--color-bg-main)] text-[var(--color-fg-main)] border-2 border-[var(--color-border-main)] p-6 w-[90%] max-w-[800px] max-h-[90vh] backdrop:bg-black/80">
+           <div class="h-full flex flex-col">
+              <h2 id="fate-modal-title" class="text-2xl font-bold mb-4">选择死因</h2>
+              <div id="fate-list" class="grid grid-cols-2 md:grid-cols-3 gap-4 flex-1 overflow-y-auto content-start">
+                  <!-- Fate items -->
+              </div>
+              <div class="flex justify-center gap-4 mt-4 pt-4 border-t border-[var(--color-border-main)]">
+                  <button id="fate-prev" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)]">&lt;&lt;</button>
+                  <span id="fate-page-info" class="self-center font-en">1 / 1</span>
+                  <button id="fate-next" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)]">&gt;&gt;</button>
+                  <button id="fate-cancel" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] ml-4">取消</button>
+              </div>
+           </div>
+      </dialog>
+  </face-interaction>
 </Layout>
 
-<script define:vars={{ faceData }}>
-  // Pass faceData to window for access
-  window.currentFaceData = faceData;
-</script>
-
 <script>
+  // @ts-nocheck
   import { getHintState, updateHintState } from '../../scripts/store';
   import { loadData, getCrew, getFatesStructure, getCorrectNames, getCorrectFates } from '../../scripts/data';
 
-  const container = document.querySelector('[data-filename]');
-  const filename = container?.getAttribute('data-filename');
-
-  if (!filename) throw new Error("Filename not found");
-
-  // Elements
-  const els = {
-      idWidget: document.getElementById('identity-widget'),
-      idContent: document.getElementById('identity-content'),
-      idLabel: document.getElementById('identity-label'),
-      idCheck: document.getElementById('identity-check-btn'),
-      fateWidget: document.getElementById('fate-widget'),
-      fateContent: document.getElementById('fate-content'),
-      fateLabel: document.getElementById('fate-label'),
-      fateCheck: document.getElementById('fate-check-btn'),
-
-      idHintBtn: document.getElementById('identity-hint-btn'),
-      idHintDone: document.getElementById('identity-hint-done'),
-      idHintList: document.getElementById('identity-hint-list'),
-      idHintMsg: document.getElementById('identity-hint-msg'),
-
-      fateHintBtn: document.getElementById('fate-hint-btn'),
-      fateHintDone: document.getElementById('fate-hint-done'),
-      fateHintList: document.getElementById('fate-hint-list'),
-      fateHintMsg: document.getElementById('fate-hint-msg'),
-
-      crewModal: document.getElementById('crew-modal'),
-      crewList: document.getElementById('crew-list'),
-      crewPrev: document.getElementById('crew-prev'),
-      crewNext: document.getElementById('crew-next'),
-      crewPage: document.getElementById('crew-page-info'),
-      crewCancel: document.getElementById('crew-cancel'),
-      crewTitle: document.getElementById('crew-modal-title'),
-      crewSidebar: document.getElementById('crew-sidebar'),
-
-      fateModal: document.getElementById('fate-modal'),
-      fateList: document.getElementById('fate-list'),
-      fatePrev: document.getElementById('fate-prev'),
-      fateNext: document.getElementById('fate-next'),
-      fatePage: document.getElementById('fate-page-info'),
-      fateCancel: document.getElementById('fate-cancel'),
-      fateTitle: document.getElementById('fate-modal-title'),
-  };
-
-  let state = getHintState(filename);
-  let crewList = [];
-  let fatesList = [];
-
-  // Modal State
-  let crewPageIdx = 0;
-  let fatePageIdx = 0;
-  let crewMode = 'identity'; // 'identity' | 'offender'
-  const ITEMS_PER_PAGE_CREW = 10;
-  const ITEMS_PER_PAGE_FATE = 9;
-
-  async function init() {
-      await loadData();
-      crewList = getCrew() || [];
-      fatesList = getFatesStructure() || [];
-      render();
-  }
-
-  function render() {
-      state = getHintState(filename); // Refresh state
-      renderIdentityWidget();
-      renderFateWidget();
-      renderHints();
-  }
-
-  // --- Identity Widget ---
-  function renderIdentityWidget() {
-      const { status, guessed_id } = state;
-      const isVerified = status === 'verified';
-
-      let text = '不详';
-      if (guessed_id) {
-          const crew = crewList.find(c => c.id === guessed_id);
-          if (crew) text = `${crew.name} (${crew.role})`;
+  class FaceInteraction extends HTMLElement {
+      constructor() {
+          super();
+          this.state = null;
+          this.crewList = [];
+          this.fatesList = [];
+          this.filename = '';
+          this.currentFaceData = null;
+          this.els = {};
+          this.crewPageIdx = 0;
+          this.fatePageIdx = 0;
+          this.crewMode = 'identity';
+          this.ITEMS_PER_PAGE_CREW = 10;
+          this.ITEMS_PER_PAGE_FATE = 9;
       }
 
-      els.idLabel.textContent = text;
-      // Note: we can't use className directly because it overwrites all classes.
-      // We should toggle specific classes or use setAttribute('class', ...)
-      // Here using className is fine as long as we include all needed classes.
-      els.idLabel.className = `text-xl ${isVerified ? 'font-cn font-bold' : 'font-hand'}`;
-
-      if (isVerified) {
-          els.idWidget.classList.add('border-[var(--color-fg-main)]', 'bg-black/40');
-          els.idCheck.classList.add('hidden');
-          els.idContent.onclick = null;
-          els.idContent.classList.remove('cursor-pointer', 'hover:bg-[var(--color-fg-main)]/10');
-      } else {
-          els.idWidget.classList.remove('border-[var(--color-fg-main)]', 'bg-black/40');
-          if (guessed_id) {
-               els.idCheck.classList.remove('hidden');
-          } else {
-               els.idCheck.classList.add('hidden');
-          }
-          els.idContent.classList.add('cursor-pointer', 'hover:bg-[var(--color-fg-main)]/10');
-          els.idContent.onclick = () => openCrewModal('identity');
-      }
-  }
-
-  // --- Fate Widget ---
-  function renderFateWidget() {
-      const { fate_status, guessed_fate } = state;
-      const isVerified = fate_status === 'verified';
-
-      const causeObj = fatesList.find(c => c.id === guessed_fate.cause_id);
-      let textHTML = '';
-      let part1Text = '未记录下落';
-
-      if (causeObj) {
-          part1Text = causeObj.label;
-          if (causeObj.has_weapon && guessed_fate.weapon) {
-              part1Text += `，${guessed_fate.weapon}`;
-          }
-          if (causeObj.requires_offender) {
-              part1Text += '，';
-          }
+      connectedCallback() {
+          // Defer execution to ensure children are parsed
+          setTimeout(() => this.init(), 0);
       }
 
-      const labelClass = `text-xl ${isVerified ? 'font-cn font-bold' : 'font-hand'}`;
-      textHTML = `<span class="${labelClass}">${part1Text}</span>`;
+      async init() {
+          try {
+              this.filename = this.getAttribute('data-filename');
 
-      if (causeObj && causeObj.requires_offender) {
-          let offName = '不详';
-          if (guessed_fate.offender_id === -1) offName = '敌人';
-          else if (guessed_fate.offender_id === -2) offName = '野兽';
-          else if (guessed_fate.offender_id) {
-              const crew = crewList.find(c => c.id === guessed_fate.offender_id);
-              if (crew) offName = crew.name;
-          }
-
-          textHTML += `<span class="${labelClass} ml-1 ${!isVerified ? 'underline cursor-pointer hover:text-white' : ''}" id="offender-label">${offName}</span>`;
-      }
-
-      els.fateContent.innerHTML = textHTML;
-
-      // Event listeners
-      if (isVerified) {
-          els.fateWidget.classList.add('border-[var(--color-fg-main)]', 'bg-black/40');
-          els.fateCheck.classList.add('hidden');
-          els.fateContent.onclick = null;
-          els.fateContent.classList.remove('cursor-pointer', 'hover:bg-[var(--color-fg-main)]/10');
-      } else {
-          els.fateWidget.classList.remove('border-[var(--color-fg-main)]', 'bg-black/40');
-          els.fateContent.classList.add('cursor-pointer', 'hover:bg-[var(--color-fg-main)]/10');
-
-          els.fateContent.onclick = (e) => {
-              if (e.target.id === 'offender-label') {
-                   e.stopPropagation();
-                   openCrewModal('offender');
-              } else {
-                   openFateModal();
+              const hintsStr = this.getAttribute('data-hints');
+              if (hintsStr) {
+                  try {
+                      this.currentFaceData = JSON.parse(hintsStr);
+                  } catch(e) {
+                      console.error("Failed to parse hints", e);
+                      this.currentFaceData = { identity_hints: [], fate_hints: [] };
+                  }
               }
-          };
 
-          // Check button logic
-          let isComplete = false;
-          if (guessed_fate.cause_id && guessed_fate.cause_id !== 1) {
-              let weaponOk = true;
-              let offenderOk = true;
-              if (causeObj.has_weapon && !guessed_fate.weapon) weaponOk = false;
-              if (causeObj.requires_offender && !guessed_fate.offender_id) offenderOk = false;
-              if (weaponOk && offenderOk) isComplete = true;
-          }
+              // Scoped queries to this element
+              this.els = {
+                  idWidget: this.querySelector('#identity-widget'),
+                  idContent: this.querySelector('#identity-content'),
+                  idLabel: this.querySelector('#identity-label'),
+                  idCheck: this.querySelector('#identity-check-btn'),
+                  fateWidget: this.querySelector('#fate-widget'),
+                  fateContent: this.querySelector('#fate-content'),
+                  fateLabel: this.querySelector('#fate-label'),
+                  fateCheck: this.querySelector('#fate-check-btn'),
 
-          if (isComplete) {
-              els.fateCheck.classList.remove('hidden');
-              els.fateCheck.disabled = false;
-          } else {
-              els.fateCheck.classList.add('hidden');
-              els.fateCheck.disabled = true;
-          }
-      }
-  }
+                  idHintBtn: this.querySelector('#identity-hint-btn'),
+                  idHintDone: this.querySelector('#identity-hint-done'),
+                  idHintList: this.querySelector('#identity-hint-list'),
+                  idHintMsg: this.querySelector('#identity-hint-msg'),
 
-  // --- Hints ---
-  function renderHints() {
-      // Identity
-      const idHints = window.currentFaceData?.identity_hints || [];
-      const idCount = state.identity;
-      renderHintList(els.idHintList, idHints, idCount, els.idHintBtn, els.idHintDone, els.idHintMsg);
+                  fateHintBtn: this.querySelector('#fate-hint-btn'),
+                  fateHintDone: this.querySelector('#fate-hint-done'),
+                  fateHintList: this.querySelector('#fate-hint-list'),
+                  fateHintMsg: this.querySelector('#fate-hint-msg'),
 
-      // Fate
-      const fateHints = window.currentFaceData?.fate_hints || [];
-      const fateCount = state.fate;
-      renderHintList(els.fateHintList, fateHints, fateCount, els.fateHintBtn, els.fateHintDone, els.fateHintMsg);
-  }
+                  crewModal: this.querySelector('#crew-modal'),
+                  crewList: this.querySelector('#crew-list'),
+                  crewPrev: this.querySelector('#crew-prev'),
+                  crewNext: this.querySelector('#crew-next'),
+                  crewPage: this.querySelector('#crew-page-info'),
+                  crewCancel: this.querySelector('#crew-cancel'),
+                  crewTitle: this.querySelector('#crew-modal-title'),
+                  crewSidebar: this.querySelector('#crew-sidebar'),
 
-  function renderHintList(listEl, allHints, count, btnEl, doneEl, msgEl) {
-      listEl.innerHTML = '';
-      // Fallback
-      if (allHints.length === 0) allHints = ["无提示"];
+                  fateModal: this.querySelector('#fate-modal'),
+                  fateList: this.querySelector('#fate-list'),
+                  fatePrev: this.querySelector('#fate-prev'),
+                  fateNext: this.querySelector('#fate-next'),
+                  fatePage: this.querySelector('#fate-page-info'),
+                  fateCancel: this.querySelector('#fate-cancel'),
+                  fateTitle: this.querySelector('#fate-modal-title'),
+              };
 
-      for (let i = 0; i < count; i++) {
-          if (i < allHints.length) {
-              const div = document.createElement('div');
-              div.className = 'font-cn';
-              div.innerHTML = processMixedText(allHints[i]);
-              listEl.appendChild(div);
-          }
-      }
+              this.bindEvents();
 
-      if (count >= allHints.length) {
-          btnEl.classList.add('hidden');
-          doneEl.classList.remove('hidden');
-          msgEl.classList.remove('hidden');
-      } else {
-          btnEl.classList.remove('hidden');
-          doneEl.classList.add('hidden');
-          msgEl.classList.add('hidden');
-      }
-  }
+              await loadData();
 
-  function processMixedText(text) {
-      let result = "";
-      let isEn = null;
-      let buffer = "";
+              this.crewList = getCrew() || [];
+              this.fatesList = getFatesStructure() || [];
 
-      for (let char of text) {
-          const charCode = char.charCodeAt(0);
-          const charIsEn = charCode < 128;
-
-          if (isEn === null) isEn = charIsEn;
-
-          if (charIsEn !== isEn) {
-              result += `<span class="${isEn ? 'font-en' : 'font-cn'}">${buffer}</span>`;
-              buffer = char;
-              isEn = charIsEn;
-          } else {
-              buffer += char;
+              this.render();
+              this.classList.add('hydrated');
+          } catch (e) {
+              console.error("FaceInteraction Init Failed", e);
           }
       }
-      if (buffer) {
-           result += `<span class="${isEn ? 'font-en' : 'font-cn'}">${buffer}</span>`;
-      }
-      return result;
-  }
 
-  // --- Modals Logic ---
-
-  // Crew Modal
-  function openCrewModal(mode) {
-      crewMode = mode;
-      crewPageIdx = 0;
-      els.crewTitle.textContent = mode === 'identity' ? '选择船员' : '选择凶手';
-
-      if (mode === 'offender') {
-          els.crewSidebar.classList.remove('hidden');
-          els.crewSidebar.classList.add('flex');
-      } else {
-          els.crewSidebar.classList.add('hidden');
-          els.crewSidebar.classList.remove('flex');
+      bindEvents() {
+          this.addEventListener('click', (e) => this.handleGlobalClick(e));
       }
 
-      renderCrewList();
-      els.crewModal.showModal();
-  }
+      handleGlobalClick(e) {
+          const target = e.target;
 
-  function renderCrewList() {
-      els.crewList.innerHTML = '';
-      const sorted = [...crewList].sort((a,b) => a.id - b.id);
-      const start = crewPageIdx * ITEMS_PER_PAGE_CREW;
-      const end = Math.min(start + ITEMS_PER_PAGE_CREW, sorted.length);
-      const pageData = sorted.slice(start, end);
-      const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE_CREW);
-
-      els.crewPage.textContent = `${crewPageIdx + 1} / ${totalPages}`;
-
-      pageData.forEach(c => {
-           const div = document.createElement('div');
-           div.className = "grid grid-cols-[50px_1fr_100px_1fr] py-2 cursor-pointer hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] border border-transparent font-en text-sm md:text-base";
-           div.innerHTML = `
-                <span>${c.id}</span>
-                <span>${c.name}</span>
-                <span>${c.role}</span>
-                <span>${c.origin}</span>
-           `;
-           div.onclick = () => selectCrew(c.id);
-           els.crewList.appendChild(div);
-      });
-  }
-
-  function selectCrew(id) {
-      updateHintState(filename, (s) => {
-          if (crewMode === 'identity') {
-              s.guessed_id = id;
-          } else {
-              s.guessed_fate.offender_id = id;
+          // Sidebar
+          const sidebarItem = target.closest('[data-special-id]');
+          if (sidebarItem) {
+              const id = parseInt(sidebarItem.getAttribute('data-special-id'));
+              this.selectCrew(id);
+              return;
           }
-      });
-      els.crewModal.close();
-      render();
-  }
 
-  // Sidebar clicks
-  document.querySelectorAll('[data-special-id]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-          const id = parseInt(e.target.getAttribute('data-special-id'));
-          selectCrew(id);
-      });
-  });
+          // Crew List Item
+          const crewItem = target.closest('[data-crew-id]');
+          if (crewItem) {
+              const id = parseInt(crewItem.getAttribute('data-crew-id'));
+              this.selectCrew(id);
+              return;
+          }
 
+          // Hint Buttons
+          if (target.closest('#identity-hint-btn')) {
+              this.handleHint('identity');
+              return;
+          }
+          if (target.closest('#fate-hint-btn')) {
+              this.handleHint('fate');
+              return;
+          }
 
-  // Fate Modal
-  function openFateModal() {
-       fatePageIdx = 0;
-       els.fateTitle.textContent = '选择死因';
-       renderFateList();
-       els.fateModal.showModal();
-  }
+          // Check Buttons
+          if (target.closest('#identity-check-btn')) {
+              e.stopPropagation();
+              this.checkIdentity();
+              return;
+          }
+          if (target.closest('#fate-check-btn')) {
+              e.stopPropagation();
+              this.checkFate();
+              return;
+          }
 
-  function renderFateList(weapons = null) {
-      els.fateList.innerHTML = '';
+          // Widget Click
+          const idContent = target.closest('#identity-content');
+          if (idContent && idContent.classList.contains('cursor-pointer')) {
+              this.openCrewModal('identity');
+              return;
+          }
 
-      let items = weapons ? weapons : fatesList;
-      // Pagination for fate list (mostly for causes, weapons usually few)
-      // Actually fatesList is ~30, so pagination needed. Weapons usually < 10.
+          const fateContent = target.closest('#fate-content');
+          if (fateContent && fateContent.classList.contains('cursor-pointer')) {
+              if (target.id === 'offender-label') {
+                  e.stopPropagation();
+                  this.openCrewModal('offender');
+              } else {
+                  this.openFateModal();
+              }
+              return;
+          }
 
-      const isWeaponMode = !!weapons;
+          // Modal Buttons
+          if (target.closest('#crew-prev')) {
+              const total = Math.ceil(this.crewList.length / this.ITEMS_PER_PAGE_CREW);
+              this.crewPageIdx = (this.crewPageIdx - 1 + total) % total;
+              this.renderCrewList();
+              return;
+          }
+          if (target.closest('#crew-next')) {
+              const total = Math.ceil(this.crewList.length / this.ITEMS_PER_PAGE_CREW);
+              this.crewPageIdx = (this.crewPageIdx + 1) % total;
+              this.renderCrewList();
+              return;
+          }
+          if (target.closest('#crew-cancel')) {
+              if(this.els.crewModal) this.els.crewModal.close();
+              return;
+          }
 
-      const start = fatePageIdx * ITEMS_PER_PAGE_FATE;
-      const end = Math.min(start + ITEMS_PER_PAGE_FATE, items.length);
-      const pageData = items.slice(start, end);
-      const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE_FATE);
+          if (target.closest('#fate-prev')) {
+               const isCauses = this.els.fateTitle.textContent === '选择死因';
+               const label = this.els.fateTitle.textContent;
+               const items = isCauses ? this.fatesList : (this.fatesList.find(c => c.label === label)?.weapons || []);
+               const total = Math.ceil(items.length / this.ITEMS_PER_PAGE_FATE);
+               if (total === 0) return;
+               this.fatePageIdx = (this.fatePageIdx - 1 + total) % total;
+               this.renderFateList(isCauses ? null : items);
+               return;
+          }
+          if (target.closest('#fate-next')) {
+               const isCauses = this.els.fateTitle.textContent === '选择死因';
+               const label = this.els.fateTitle.textContent;
+               const items = isCauses ? this.fatesList : (this.fatesList.find(c => c.label === label)?.weapons || []);
+               const total = Math.ceil(items.length / this.ITEMS_PER_PAGE_FATE);
+               if (total === 0) return;
+               this.fatePageIdx = (this.fatePageIdx + 1) % total;
+               this.renderFateList(isCauses ? null : items);
+               return;
+          }
+          if (target.closest('#fate-cancel')) {
+              if(this.els.fateModal) this.els.fateModal.close();
+              return;
+          }
+      }
 
-      els.fatePage.textContent = `${fatePageIdx + 1} / ${totalPages}`;
+      handleHint(type) {
+          updateHintState(this.filename, s => {
+               s[type]++;
+               const hints = type === 'identity' ? this.currentFaceData?.identity_hints : this.currentFaceData?.fate_hints;
+               if (!hints) return;
 
-      pageData.forEach(item => {
-          const div = document.createElement('div');
-          div.className = "border border-[var(--color-border-main)] p-4 text-center cursor-pointer hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] transition-colors h-20 flex items-center justify-center";
-          div.textContent = isWeaponMode ? item : item.label;
-
-          div.onclick = () => {
-               if (isWeaponMode) {
-                   // Selected weapon
-                   updateHintState(filename, s => {
-                       s.guessed_fate.weapon = item;
-                   });
-                   els.fateModal.close();
-                   render();
+               if (type === 'identity') {
+                   if (s.identity >= hints.length && s.status !== 'verified') {
+                        const correctMap = getCorrectNames();
+                        if (correctMap && correctMap[this.filename]) {
+                            s.guessed_id = correctMap[this.filename];
+                            s.status = 'verified';
+                        }
+                   }
                } else {
-                   // Selected Cause
-                   const causeObj = item;
-                   updateHintState(filename, s => {
-                       s.guessed_fate.cause_id = causeObj.id;
-                       s.guessed_fate.weapon = null;
-                   });
-
-                   if (causeObj.has_weapon) {
-                       // Show weapons
-                       fatePageIdx = 0;
-                       els.fateTitle.textContent = causeObj.label;
-                       renderFateList(causeObj.weapons);
-                   } else {
-                       els.fateModal.close();
-                       render();
+                   if (s.fate >= hints.length && s.fate_status !== 'verified') {
+                        const correctMap = getCorrectFates();
+                        if (correctMap && correctMap[this.filename]) {
+                            const correctData = correctMap[this.filename];
+                            const correctFate = Array.isArray(correctData) ? correctData[0] : correctData;
+                            const causeObj = this.fatesList.find(c => c.label === correctFate.cause);
+                            if (causeObj) {
+                                 s.guessed_fate = {
+                                     cause_id: causeObj.id,
+                                     weapon: correctFate.weapon,
+                                     offender_id: correctFate.offender_id
+                                 };
+                                 s.fate_status = 'verified';
+                            }
+                        }
                    }
                }
-          };
-          els.fateList.appendChild(div);
-      });
+          });
+          this.render();
+      }
+
+      checkIdentity() {
+          const correctMap = getCorrectNames();
+          const correctId = correctMap[this.filename];
+          const guess = this.state.guessed_id;
+
+          if (guess === correctId) {
+              updateHintState(this.filename, s => {
+                  s.status = 'verified';
+                  const hints = this.currentFaceData?.identity_hints || [];
+                  s.identity = Math.max(s.identity, hints.length > 0 ? hints.length : 1);
+              });
+              this.render();
+          } else {
+              if(this.els.idWidget) this.els.idWidget.classList.add('animate-shake');
+              if(this.els.idLabel) this.els.idLabel.style.textDecoration = 'line-through';
+              setTimeout(() => {
+                  if(this.els.idWidget) this.els.idWidget.classList.remove('animate-shake');
+                  if(this.els.idLabel) this.els.idLabel.style.textDecoration = 'none';
+                  updateHintState(this.filename, s => { s.guessed_id = null; });
+                  this.render();
+              }, 1000);
+          }
+      }
+
+      checkFate() {
+          const correctFatesData = getCorrectFates()[this.filename];
+          const correctFates = Array.isArray(correctFatesData) ? correctFatesData : [correctFatesData];
+
+          const guess = this.state.guessed_fate;
+          const causeObj = this.fatesList.find(c => c.id === guess.cause_id);
+          const gLabel = causeObj ? causeObj.label : "";
+
+          let isCorrect = false;
+          for (let correct of correctFates) {
+                const matchCause = (gLabel === correct.cause);
+                const matchWeapon = (guess.weapon === correct.weapon);
+                let matchOffender = true;
+                if (causeObj && causeObj.requires_offender) {
+                    matchOffender = (guess.offender_id === correct.offender_id);
+                }
+                if (matchCause && matchWeapon && matchOffender) {
+                    isCorrect = true;
+                    break;
+                }
+          }
+
+          if (isCorrect) {
+              updateHintState(this.filename, s => {
+                  s.fate_status = 'verified';
+                  const hints = this.currentFaceData?.fate_hints || [];
+                  s.fate = Math.max(s.fate, hints.length > 0 ? hints.length : 1);
+              });
+              this.render();
+          } else {
+              if(this.els.fateWidget) this.els.fateWidget.classList.add('animate-shake');
+              if(this.els.fateLabel) this.els.fateLabel.style.textDecoration = 'line-through';
+              setTimeout(() => {
+                  if(this.els.fateWidget) this.els.fateWidget.classList.remove('animate-shake');
+                  if(this.els.fateLabel) this.els.fateLabel.style.textDecoration = 'none';
+                  updateHintState(this.filename, s => {
+                       s.guessed_fate = { cause_id: null, weapon: null, offender_id: null };
+                  });
+                  this.render();
+              }, 1000);
+          }
+      }
+
+      render() {
+          this.state = getHintState(this.filename);
+          this.renderIdentityWidget();
+          this.renderFateWidget();
+          this.renderHints();
+      }
+
+      renderIdentityWidget() {
+          const { status, guessed_id } = this.state;
+          const isVerified = status === 'verified';
+
+          let text = '不详';
+          if (guessed_id) {
+              const crew = this.crewList.find(c => c.id === guessed_id);
+              if (crew) text = `${crew.name} (${crew.role})`;
+          }
+
+          if(this.els.idLabel) {
+              this.els.idLabel.textContent = text;
+              this.els.idLabel.className = 'text-xl';
+              if (isVerified) this.els.idLabel.classList.add('font-cn', 'font-bold');
+              else this.els.idLabel.classList.add('font-hand');
+          }
+
+          if (this.els.idWidget) {
+              if (isVerified) {
+                  this.els.idWidget.classList.add('border-[var(--color-fg-main)]', 'bg-black/40');
+                  if(this.els.idCheck) this.els.idCheck.classList.add('hidden');
+                  if(this.els.idContent) this.els.idContent.classList.remove('cursor-pointer', 'hover:bg-[var(--color-fg-main)]/10');
+              } else {
+                  this.els.idWidget.classList.remove('border-[var(--color-fg-main)]', 'bg-black/40');
+                  if(this.els.idCheck) {
+                      if (guessed_id) this.els.idCheck.classList.remove('hidden');
+                      else this.els.idCheck.classList.add('hidden');
+                  }
+                  if(this.els.idContent) this.els.idContent.classList.add('cursor-pointer', 'hover:bg-[var(--color-fg-main)]/10');
+              }
+          }
+      }
+
+      renderFateWidget() {
+          const { fate_status, guessed_fate } = this.state;
+          const isVerified = fate_status === 'verified';
+
+          const causeObj = this.fatesList.find(c => c.id === guessed_fate.cause_id);
+          let part1Text = '未记录下落';
+          if (causeObj) {
+              part1Text = causeObj.label;
+              if (causeObj.has_weapon && guessed_fate.weapon) part1Text += `，${guessed_fate.weapon}`;
+              if (causeObj.requires_offender) part1Text += '，';
+          }
+
+          const labelClass = `text-xl ${isVerified ? 'font-cn font-bold' : 'font-hand'}`;
+          let textHTML = `<span class="${labelClass}">${part1Text}</span>`;
+
+          if (causeObj && causeObj.requires_offender) {
+              let offName = '不详';
+              if (guessed_fate.offender_id === -1) offName = '敌人';
+              else if (guessed_fate.offender_id === -2) offName = '野兽';
+              else if (guessed_fate.offender_id) {
+                  const crew = this.crewList.find(c => c.id === guessed_fate.offender_id);
+                  if (crew) offName = crew.name;
+              }
+              textHTML += `<span class="${labelClass} ml-1 ${!isVerified ? 'underline cursor-pointer hover:text-white' : ''}" id="offender-label">${offName}</span>`;
+          }
+
+          if(this.els.fateContent) this.els.fateContent.innerHTML = textHTML;
+
+          if(this.els.fateWidget) {
+              if (isVerified) {
+                  this.els.fateWidget.classList.add('border-[var(--color-fg-main)]', 'bg-black/40');
+                  if(this.els.fateCheck) this.els.fateCheck.classList.add('hidden');
+                  if(this.els.fateContent) this.els.fateContent.classList.remove('cursor-pointer', 'hover:bg-[var(--color-fg-main)]/10');
+              } else {
+                  this.els.fateWidget.classList.remove('border-[var(--color-fg-main)]', 'bg-black/40');
+                  if(this.els.fateContent) this.els.fateContent.classList.add('cursor-pointer', 'hover:bg-[var(--color-fg-main)]/10');
+
+                  let isComplete = false;
+                  if (guessed_fate.cause_id && guessed_fate.cause_id !== 1) {
+                      let weaponOk = true;
+                      let offenderOk = true;
+                      if (causeObj.has_weapon && !guessed_fate.weapon) weaponOk = false;
+                      if (causeObj.requires_offender && !guessed_fate.offender_id) offenderOk = false;
+                      if (weaponOk && offenderOk) isComplete = true;
+                  }
+                  if(this.els.fateCheck) {
+                      this.els.fateCheck.disabled = !isComplete;
+                      if (isComplete) this.els.fateCheck.classList.remove('hidden');
+                      else this.els.fateCheck.classList.add('hidden');
+                  }
+              }
+          }
+      }
+
+      renderHints() {
+          const idHints = this.currentFaceData?.identity_hints || [];
+          this.renderHintList(this.els.idHintList, idHints, this.state.identity, this.els.idHintBtn, this.els.idHintDone, this.els.idHintMsg);
+
+          const fateHints = this.currentFaceData?.fate_hints || [];
+          this.renderHintList(this.els.fateHintList, fateHints, this.state.fate, this.els.fateHintBtn, this.els.fateHintDone, this.els.fateHintMsg);
+      }
+
+      renderHintList(listEl, allHints, count, btnEl, doneEl, msgEl) {
+          if (!listEl) return;
+          if (allHints.length === 0) allHints = ["无提示"];
+
+          const currentCount = listEl.childElementCount;
+          if (currentCount > count) {
+              listEl.innerHTML = '';
+          }
+
+          for (let i = listEl.childElementCount; i < count; i++) {
+              if (i < allHints.length) {
+                  const div = document.createElement('div');
+                  div.className = 'font-cn';
+                  div.innerHTML = this.processMixedText(allHints[i]);
+                  listEl.appendChild(div);
+              }
+          }
+
+          if (count >= allHints.length) {
+              if(btnEl) btnEl.classList.add('hidden');
+              if(doneEl) doneEl.classList.remove('hidden');
+              if(msgEl) msgEl.classList.remove('hidden');
+          } else {
+              if(btnEl) btnEl.classList.remove('hidden');
+              if(doneEl) doneEl.classList.add('hidden');
+              if(msgEl) msgEl.classList.add('hidden');
+          }
+
+          listEl.scrollTop = listEl.scrollHeight;
+      }
+
+      processMixedText(text) {
+          let result = "";
+          let isEn = null;
+          let buffer = "";
+
+          for (let char of text) {
+              const charCode = char.charCodeAt(0);
+              const charIsEn = charCode < 128;
+
+              if (isEn === null) isEn = charIsEn;
+
+              if (charIsEn !== isEn) {
+                  result += `<span class="${isEn ? 'font-en' : 'font-cn'}">${buffer}</span>`;
+                  buffer = char;
+                  isEn = charIsEn;
+              } else {
+                  buffer += char;
+              }
+          }
+          if (buffer) {
+               result += `<span class="${isEn ? 'font-en' : 'font-cn'}">${buffer}</span>`;
+          }
+          return result;
+      }
+
+      openCrewModal(mode) {
+          this.crewMode = mode;
+          this.crewPageIdx = 0;
+          if(this.els.crewTitle) this.els.crewTitle.textContent = mode === 'identity' ? '选择船员' : '选择凶手';
+
+          if(this.els.crewSidebar) {
+              if (mode === 'offender') {
+                  this.els.crewSidebar.classList.remove('hidden');
+                  this.els.crewSidebar.classList.add('flex');
+              } else {
+                  this.els.crewSidebar.classList.add('hidden');
+                  this.els.crewSidebar.classList.remove('flex');
+              }
+          }
+
+          this.renderCrewList();
+          if(this.els.crewModal) this.els.crewModal.showModal();
+      }
+
+      renderCrewList() {
+          if(!this.els.crewList) return;
+          this.els.crewList.innerHTML = '';
+
+          const sorted = [...this.crewList].sort((a,b) => a.id - b.id);
+          const start = this.crewPageIdx * this.ITEMS_PER_PAGE_CREW;
+          const end = Math.min(start + this.ITEMS_PER_PAGE_CREW, sorted.length);
+          const pageData = sorted.slice(start, end);
+          const totalPages = Math.ceil(sorted.length / this.ITEMS_PER_PAGE_CREW);
+
+          if(this.els.crewPage) this.els.crewPage.textContent = `${this.crewPageIdx + 1} / ${totalPages}`;
+
+          pageData.forEach(c => {
+               const div = document.createElement('div');
+               div.className = "grid grid-cols-[50px_1fr_100px_1fr] py-2 cursor-pointer hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] border border-transparent font-en text-sm md:text-base";
+               div.innerHTML = `
+                    <span>${c.id}</span>
+                    <span>${c.name}</span>
+                    <span>${c.role}</span>
+                    <span>${c.origin}</span>
+               `;
+               div.setAttribute('data-crew-id', c.id);
+               div.setAttribute('data-crew-item', 'true'); // for consistency if checking
+               this.els.crewList.appendChild(div);
+          });
+      }
+
+      selectCrew(id) {
+          updateHintState(this.filename, (s) => {
+              if (this.crewMode === 'identity') {
+                  s.guessed_id = id;
+              } else {
+                  s.guessed_fate.offender_id = id;
+              }
+          });
+          if(this.els.crewModal) this.els.crewModal.close();
+          this.render();
+      }
+
+      openFateModal() {
+           this.fatePageIdx = 0;
+           if(this.els.fateTitle) this.els.fateTitle.textContent = '选择死因';
+           this.renderFateList();
+           if(this.els.fateModal) this.els.fateModal.showModal();
+      }
+
+      renderFateList(weapons = null) {
+          if(!this.els.fateList) return;
+          this.els.fateList.innerHTML = '';
+
+          let items = weapons ? weapons : this.fatesList;
+          const isWeaponMode = !!weapons;
+          const start = this.fatePageIdx * this.ITEMS_PER_PAGE_FATE;
+          const end = Math.min(start + this.ITEMS_PER_PAGE_FATE, items.length);
+          const pageData = items.slice(start, end);
+          const totalPages = Math.ceil(items.length / this.ITEMS_PER_PAGE_FATE);
+
+          if(this.els.fatePage) this.els.fatePage.textContent = `${this.fatePageIdx + 1} / ${totalPages}`;
+
+          pageData.forEach(item => {
+              const div = document.createElement('div');
+              div.className = "border border-[var(--color-border-main)] p-4 text-center cursor-pointer hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] transition-colors h-20 flex items-center justify-center";
+              div.textContent = isWeaponMode ? item : item.label;
+
+              div.onclick = () => {
+                   if (isWeaponMode) {
+                       updateHintState(this.filename, s => { s.guessed_fate.weapon = item; });
+                       if(this.els.fateModal) this.els.fateModal.close();
+                       this.render();
+                   } else {
+                       const causeObj = item;
+                       updateHintState(this.filename, s => {
+                           s.guessed_fate.cause_id = causeObj.id;
+                           s.guessed_fate.weapon = null;
+                       });
+                       if (causeObj.has_weapon) {
+                           this.fatePageIdx = 0;
+                           if(this.els.fateTitle) this.els.fateTitle.textContent = causeObj.label;
+                           this.renderFateList(causeObj.weapons);
+                       } else {
+                           if(this.els.fateModal) this.els.fateModal.close();
+                           this.render();
+                       }
+                   }
+              };
+              this.els.fateList.appendChild(div);
+          });
+      }
   }
 
-  // --- Buttons ---
-  els.crewPrev.onclick = () => {
-      const sorted = [...crewList]; // Length check
-      const total = Math.ceil(sorted.length / ITEMS_PER_PAGE_CREW);
-      crewPageIdx = (crewPageIdx - 1 + total) % total;
-      renderCrewList();
-  };
-  els.crewNext.onclick = () => {
-      const sorted = [...crewList];
-      const total = Math.ceil(sorted.length / ITEMS_PER_PAGE_CREW);
-      crewPageIdx = (crewPageIdx + 1) % total;
-      renderCrewList();
-  };
-  els.crewCancel.onclick = () => els.crewModal.close();
-
-  els.fatePrev.onclick = () => {
-       // Check if viewing weapons or causes?
-       // We need to know current mode.
-       // Simplification: if title is "选择死因", we are in causes.
-       const isCauses = els.fateTitle.textContent === '选择死因';
-       const items = isCauses ? fatesList : (fatesList.find(c => c.label === els.fateTitle.textContent)?.weapons || []);
-
-       const total = Math.ceil(items.length / ITEMS_PER_PAGE_FATE);
-       if (total === 0) return;
-       fatePageIdx = (fatePageIdx - 1 + total) % total;
-       renderFateList(isCauses ? null : items);
-  };
-  els.fateNext.onclick = () => {
-       const isCauses = els.fateTitle.textContent === '选择死因';
-       const items = isCauses ? fatesList : (fatesList.find(c => c.label === els.fateTitle.textContent)?.weapons || []);
-
-       const total = Math.ceil(items.length / ITEMS_PER_PAGE_FATE);
-       if (total === 0) return;
-       fatePageIdx = (fatePageIdx + 1) % total;
-       renderFateList(isCauses ? null : items);
-  };
-  els.fateCancel.onclick = () => els.fateModal.close();
-
-  // --- Check Logic ---
-  els.idCheck.onclick = (e) => {
-      e.stopPropagation();
-      const correctMap = getCorrectNames();
-      const correctId = correctMap[filename];
-      const guess = state.guessed_id;
-
-      if (guess === correctId) {
-          updateHintState(filename, s => {
-              s.status = 'verified';
-              // Reveal all hints
-              const hints = window.currentFaceData?.identity_hints || [];
-              s.identity = Math.max(s.identity, hints.length > 0 ? hints.length : 1);
-          });
-          render();
-      } else {
-          els.idWidget.classList.add('animate-shake');
-          els.idLabel.style.textDecoration = 'line-through';
-          setTimeout(() => {
-              els.idWidget.classList.remove('animate-shake');
-              els.idLabel.style.textDecoration = 'none';
-              updateHintState(filename, s => {
-                  s.guessed_id = null;
-              });
-              render();
-          }, 1000);
-      }
-  };
-
-  els.fateCheck.onclick = (e) => {
-      e.stopPropagation();
-      const correctFatesData = getCorrectFates()[filename];
-      const correctFates = Array.isArray(correctFatesData) ? correctFatesData : [correctFatesData];
-
-      const guess = state.guessed_fate;
-      const causeObj = fatesList.find(c => c.id === guess.cause_id);
-      const gLabel = causeObj ? causeObj.label : "";
-
-      let isCorrect = false;
-      for (let correct of correctFates) {
-            const matchCause = (gLabel === correct.cause);
-            const matchWeapon = (guess.weapon === correct.weapon);
-            let matchOffender = true;
-            if (causeObj && causeObj.requires_offender) {
-                matchOffender = (guess.offender_id === correct.offender_id);
-            }
-            if (matchCause && matchWeapon && matchOffender) {
-                isCorrect = true;
-                break;
-            }
-      }
-
-      if (isCorrect) {
-          updateHintState(filename, s => {
-              s.fate_status = 'verified';
-              // Reveal hints
-              const hints = window.currentFaceData?.fate_hints || [];
-              s.fate = Math.max(s.fate, hints.length > 0 ? hints.length : 1);
-          });
-          render();
-      } else {
-          els.fateWidget.classList.add('animate-shake');
-          els.fateLabel.style.textDecoration = 'line-through';
-          setTimeout(() => {
-              els.fateWidget.classList.remove('animate-shake');
-              els.fateLabel.style.textDecoration = 'none';
-              updateHintState(filename, s => {
-                   s.guessed_fate = { cause_id: null, weapon: null, offender_id: null };
-              });
-              render();
-          }, 1000);
-      }
-  };
-
-  // --- Reveal Hint ---
-  els.idHintBtn.onclick = () => {
-      updateHintState(filename, s => {
-           s.identity++;
-
-           // Auto Lock Logic
-           const hints = window.currentFaceData?.identity_hints || [];
-           if (s.identity >= hints.length && s.status !== 'verified') {
-                const correctMap = getCorrectNames();
-                if (correctMap && correctMap[filename]) {
-                    s.guessed_id = correctMap[filename];
-                    s.status = 'verified';
-                }
-           }
-      });
-      render();
-  };
-
-  els.fateHintBtn.onclick = () => {
-      updateHintState(filename, s => {
-           s.fate++;
-
-           // Auto Lock
-           const hints = window.currentFaceData?.fate_hints || [];
-           if (s.fate >= hints.length && s.fate_status !== 'verified') {
-                const correctMap = getCorrectFates();
-                if (correctMap && correctMap[filename]) {
-                    const correctData = correctMap[filename];
-                    const correctFate = Array.isArray(correctData) ? correctData[0] : correctData;
-                    const causeObj = fatesList.find(c => c.label === correctFate.cause);
-                    if (causeObj) {
-                         s.guessed_fate = {
-                             cause_id: causeObj.id,
-                             weapon: correctFate.weapon,
-                             offender_id: correctFate.offender_id
-                         };
-                         s.fate_status = 'verified';
-                    }
-                }
-           }
-      });
-      render();
-  };
-
-  // Run init
-  init();
-
+  if (!customElements.get('face-interaction')) {
+      customElements.define('face-interaction', FaceInteraction);
+  }
 </script>
