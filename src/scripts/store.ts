@@ -56,3 +56,9 @@ export function resetData(): void {
     localStorage.removeItem(STORAGE_KEY);
   }
 }
+
+export function resetFaceData(filename: string): void {
+  const allState = loadState();
+  delete allState[filename];
+  saveState(allState);
+}

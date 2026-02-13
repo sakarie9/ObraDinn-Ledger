@@ -69,7 +69,9 @@ const faces = Array.from({ length: 60 }, (_, i) => {
 
     // Reset button
     const resetBtn = document.getElementById("reset-btn");
-    if (resetBtn) {
+    if (resetBtn && !resetBtn.hasAttribute("data-listener-attached")) {
+      resetBtn.setAttribute("data-listener-attached", "true");
+
       resetBtn.addEventListener("click", () => {
         if (confirm("确定要清空所有身份推测和提示进度吗？(此操作不可撤销)")) {
           resetData();
@@ -89,13 +91,18 @@ const faces = Array.from({ length: 60 }, (_, i) => {
       }
     }
 
-    // Save scroll position before navigation
-    const links = document.querySelectorAll('a[href*="/face/"]');
-    links.forEach((link) => {
-      link.addEventListener("click", () => {
-        sessionStorage.setItem(SCROLL_KEY, window.scrollY.toString());
+    // Save scroll position before navigation using event delegation
+    const container = document.querySelector(".grid");
+    if (container && !container.hasAttribute("data-scroll-handler")) {
+      container.setAttribute("data-scroll-handler", "true");
+      container.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        const link = target.closest('a[href*="/face/"]');
+        if (link) {
+          sessionStorage.setItem(SCROLL_KEY, window.scrollY.toString());
+        }
       });
-    });
+    }
   });
 
   // Clear scroll position when leaving index page to other pages (not face pages)

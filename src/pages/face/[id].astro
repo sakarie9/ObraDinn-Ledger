@@ -35,7 +35,7 @@ const preloadText = [
 ].join("");
 ---
 
-<Layout title={`No. ${id} - 奥伯拉丁的回归`}>
+<Layout title={`命运勘验 - No. ${id}`}>
   <face-interaction data-filename={filename} data-hints={hintsData}>
     <!-- Font preloader: unique characters trigger all needed woff2 subset downloads at page parse time -->
     <div aria-hidden="true" class="font-preloader">
@@ -47,9 +47,6 @@ const preloadText = [
         <a href={`${import.meta.env.BASE_URL}/`} class="back-link"
           >&lt;&lt; 返回列表</a
         >
-        <h1 class="text-xl sm:text-2xl font-bold font-cn flex-1 text-center">
-          No. {id}
-        </h1>
         <button id="reset-btn" class="btn-lg cursor-pointer">重置</button>
       </div>
 
@@ -595,6 +592,7 @@ const preloadText = [
         isIdentity ? this.els.idHintBtn : this.els.fateHintBtn,
         isIdentity ? this.els.idHintDone : this.els.fateHintDone,
         isIdentity ? this.els.idHintMsg : this.els.fateHintMsg,
+        true, // Scroll when user clicks hint button
       );
     }
 
@@ -783,6 +781,7 @@ const preloadText = [
         this.els.idHintBtn,
         this.els.idHintDone,
         this.els.idHintMsg,
+        false, // Don't scroll on initial render
       );
 
       const fateHints = this.currentFaceData?.fate_hints || [];
@@ -793,6 +792,7 @@ const preloadText = [
         this.els.fateHintBtn,
         this.els.fateHintDone,
         this.els.fateHintMsg,
+        false, // Don't scroll on initial render
       );
     }
 
@@ -803,6 +803,7 @@ const preloadText = [
       btnEl: HTMLElement | null,
       doneEl: HTMLElement | null,
       msgEl: HTMLElement | null,
+      shouldScroll = false,
     ): void {
       if (!listEl) return;
       if (allHints.length === 0) allHints = ["无提示"];
@@ -824,15 +825,19 @@ const preloadText = [
         }
         listEl.appendChild(fragment);
 
-        // Single RAF after fonts are loaded is sufficient
-        requestAnimationFrame(() => {
-          listEl.scrollTop = listEl.scrollHeight;
-          // On mobile, scroll the page so the hint panel bottom is visible in viewport
-          const hintPanel = listEl.closest(".hint-panel") as HTMLElement | null;
-          if (hintPanel) {
-            hintPanel.scrollIntoView({ behavior: "smooth", block: "end" });
-          }
-        });
+        // Only scroll when explicitly requested (e.g., when user clicks hint button)
+        if (shouldScroll) {
+          requestAnimationFrame(() => {
+            listEl.scrollTop = listEl.scrollHeight;
+            // On mobile, scroll the page so the hint panel bottom is visible in viewport
+            const hintPanel = listEl.closest(
+              ".hint-panel",
+            ) as HTMLElement | null;
+            if (hintPanel) {
+              hintPanel.scrollIntoView({ behavior: "smooth", block: "end" });
+            }
+          });
+        }
       }
 
       const isDone = count >= allHints.length;
@@ -1012,16 +1017,26 @@ const preloadText = [
   }
 
   // Reset button functionality
-  import { resetData } from "../../scripts/store";
+  import { resetFaceData } from "../../scripts/store";
 
   document.addEventListener("astro:page-load", () => {
     const resetBtn = document.getElementById("reset-btn");
-    if (resetBtn) {
+    const faceInteraction = document.querySelector("face-interaction") as any;
+
+    if (
+      resetBtn &&
+      faceInteraction &&
+      !resetBtn.hasAttribute("data-listener-attached")
+    ) {
+      resetBtn.setAttribute("data-listener-attached", "true");
+
       resetBtn.addEventListener("click", () => {
-        if (confirm("确定要清空所有身份推测和提示进度吗？(此操作不可撤销)")) {
-          resetData();
-          alert("所有进度已重置。");
-          window.location.href = `${import.meta.env.BASE_URL}/`;
+        if (
+          confirm("确定要重置当前人物的身份推测和提示进度吗？(此操作不可撤销)")
+        ) {
+          resetFaceData(faceInteraction.filename);
+          faceInteraction.render();
+          alert("当前人物进度已重置。");
         }
       });
     }
