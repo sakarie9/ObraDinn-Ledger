@@ -1,0 +1,109 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const faces = Array.from({ length: 60 }, (_, i) => {
+  const num = (i + 1).toString().padStart(2, "0");
+  return `face_${num}.webp`;
+});
+---
+
+<Layout title="《奥伯拉丁》命运勘验">
+  <div class="flex flex-col gap-5">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-5">
+      <h1 class="text-2xl font-bold font-cn hidden sm:block">
+        《奥伯拉丁》命运勘验
+      </h1>
+      <button id="reset-btn" class="btn-lg cursor-pointer">重置</button>
+    </div>
+
+    <!-- Grid -->
+    <div
+      class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4"
+    >
+      {
+        faces.map((face, index) => (
+          <a
+            href={`${import.meta.env.BASE_URL}/face/${index + 1}`}
+            class="block aspect-square relative"
+            data-face={face}
+          >
+            <div class="face-card">
+              <img
+                src={`${import.meta.env.BASE_URL}/FacesHi/${face}`}
+                alt={`Face ${index + 1}`}
+                loading="lazy"
+              />
+            </div>
+            <div class="face-check" aria-hidden="true">
+              ✓
+            </div>
+            <div class="absolute bottom-1 right-1 text-sm font-semibold text-gray-300 font-en opacity-70">
+              {index + 1}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="text-center text-sm text-[#AAAA88] mt-10">
+      <p>点击头像进入详情页</p>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { resetData, loadState } from "../scripts/store";
+
+  const SCROLL_KEY = "index-scroll-position";
+  const BASE_URL = import.meta.env.BASE_URL;
+
+  document.addEventListener("astro:page-load", () => {
+    // Restore scroll position
+    const savedScroll = sessionStorage.getItem(SCROLL_KEY);
+    if (savedScroll) {
+      requestAnimationFrame(() => {
+        window.scrollTo(0, parseInt(savedScroll, 10));
+      });
+    }
+
+    // Reset button
+    const resetBtn = document.getElementById("reset-btn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        if (confirm("确定要清空所有身份推测和提示进度吗？(此操作不可撤销)")) {
+          resetData();
+          alert("所有进度已重置。");
+          window.location.reload();
+        }
+      });
+    }
+
+    // Show checkmarks on fully verified faces
+    const state = loadState();
+    for (const [filename, s] of Object.entries(state)) {
+      if (s.status === "verified" && s.fate_status === "verified") {
+        const link = document.querySelector(`[data-face="${filename}"]`);
+        const check = link?.querySelector(".face-check");
+        if (check) check.classList.add("visible");
+      }
+    }
+
+    // Save scroll position before navigation
+    const links = document.querySelectorAll('a[href*="/face/"]');
+    links.forEach((link) => {
+      link.addEventListener("click", () => {
+        sessionStorage.setItem(SCROLL_KEY, window.scrollY.toString());
+      });
+    });
+  });
+
+  // Clear scroll position when leaving index page to other pages (not face pages)
+  document.addEventListener("astro:before-preparation", (e) => {
+    const event = e as TransitionBeforePreparationEvent;
+    const newUrl = event.to?.href;
+    if (newUrl && !newUrl.includes("/face/")) {
+      sessionStorage.removeItem(SCROLL_KEY);
+    }
+  });
+</script>

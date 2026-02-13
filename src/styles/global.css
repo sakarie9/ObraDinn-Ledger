@@ -1,0 +1,504 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-main: #333319;
+  --color-fg-main: #e5feff;
+  --color-border-main: #aaaa88;
+
+  --font-en: "Crimson Text", serif;
+  --font-cn: "Ma Shan Zheng", cursive;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-bg-main);
+    color: var(--color-fg-main);
+    font-family: var(--font-cn);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  button {
+    font-family: var(--font-cn);
+  }
+}
+
+/* Font utilities */
+.font-en {
+  font-family: var(--font-en);
+}
+.font-cn {
+  font-family: var(--font-cn);
+  /* Prevent font loading from causing layout shift */
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Font preloader: offscreen element that forces font subset downloads at page load */
+.font-preloader {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  visibility: hidden;
+  pointer-events: none;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* ===== Buttons ===== */
+
+.btn {
+  border: 1px solid var(--color-fg-main);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+.btn:hover {
+  background: var(--color-fg-main);
+  color: var(--color-bg-main);
+}
+
+.btn-lg {
+  border: 1px solid var(--color-fg-main);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+.btn-lg:hover {
+  background: var(--color-fg-main);
+  color: var(--color-bg-main);
+}
+
+/* ===== Index Page - Face Grid ===== */
+
+.face-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(170, 170, 136, 0.3);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background-color 0.2s;
+}
+.face-card:hover {
+  border-color: var(--color-fg-main);
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 0 20px rgba(229, 254, 255, 0.4),
+    inset 0 0 20px rgba(229, 254, 255, 0.1);
+}
+.face-card img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.15s;
+}
+.face-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Checkmark overlay for verified faces */
+.face-check {
+  display: none;
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+  background: var(--color-fg-main);
+  color: var(--color-bg-main);
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+.face-check.visible {
+  display: flex;
+}
+
+/* ===== Face Detail Page ===== */
+
+.back-link {
+  display: inline-block;
+  border: 1px solid var(--color-fg-main);
+  padding: 0.5rem 1rem;
+  border-radius: 0.125rem;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+.back-link:hover {
+  background: var(--color-fg-main);
+  color: var(--color-bg-main);
+}
+
+/* Widget (identity / fate) */
+.widget {
+  width: 100%;
+  min-height: 5rem;
+  border: 1px solid var(--color-border-main);
+  border-radius: 0.25rem;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  position: relative;
+  user-select: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+@media (min-width: 768px) {
+  .widget {
+    width: 33.333%;
+  }
+}
+.widget[data-verified] {
+  border-color: var(--color-fg-main);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.widget-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  border-radius: 0.25rem;
+}
+.widget-content:hover {
+  background: rgba(229, 254, 255, 0.08);
+}
+.widget:not([data-verified]):hover {
+  border-color: rgba(229, 254, 255, 0.6);
+  box-shadow: 0 0 10px rgba(229, 254, 255, 0.2);
+}
+.widget[data-verified] .widget-content {
+  cursor: default;
+}
+.widget[data-verified] .widget-content:hover {
+  background: transparent;
+}
+#identity-content {
+  justify-content: flex-end;
+  text-align: right;
+}
+#fate-content {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.widget-label {
+  font-size: 1.25rem;
+  font-family: var(--font-cn);
+}
+.widget[data-verified] .widget-label {
+  font-weight: bold;
+}
+
+.check-btn {
+  position: relative;
+  z-index: 10;
+  margin: 0 0.75rem;
+}
+.widget[data-verified] .check-btn {
+  display: none !important;
+}
+
+/* Offender label in fate widget */
+.offender-label {
+  font-size: 1.25rem;
+  font-family: var(--font-cn);
+  margin-left: 0.25rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.offender-label:hover {
+  color: white;
+}
+.widget[data-verified] .offender-label {
+  font-weight: bold;
+  text-decoration: none;
+  cursor: default;
+}
+
+/* Image container: CSS containment isolates the image from sibling layout/paint
+   changes, preventing unnecessary image re-evaluation when fonts load or
+   widget content changes */
+.face-img-container {
+  contain: layout paint;
+}
+
+/* Face image */
+.face-img {
+  max-height: 300px;
+  width: auto;
+  border: 1px solid var(--color-border-main);
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Hint Panels ===== */
+
+.hint-panel {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-border-main);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 450px;
+  /* Isolate layout: changes inside this panel cannot trigger reflow of
+     elements outside it. Use layout+paint instead of strict to avoid
+     some edge cases while still preventing cross-container reflow. */
+  contain: layout paint;
+}
+
+.hint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border-main);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  min-height: 50px;
+}
+
+.hint-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: var(--font-cn);
+}
+
+.hint-done {
+  display: none;
+  background: var(--color-fg-main);
+  color: var(--color-bg-main);
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.hint-done.visible {
+  display: flex;
+}
+
+.hint-list {
+  flex-grow: 1;
+  /* Use 'scroll' not 'auto' — with 'auto' the scrollbar appearance on first
+     overflow changes the content width, triggering a reflow of all hint text. */
+  overflow-y: scroll;
+  padding-right: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-fg-main) transparent;
+  /* Prevent font subsetting/swapping from causing layout shifts */
+  font-kerning: none;
+  text-rendering: optimizeSpeed;
+}
+
+.hint-msg {
+  display: none;
+  text-align: center;
+  color: #aaaa88;
+  font-style: italic;
+  border-top: 1px solid rgba(170, 170, 136, 0.3);
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+}
+.hint-msg.visible {
+  display: block;
+}
+
+/* ===== Modals ===== */
+
+.modal {
+  margin: auto;
+  background: var(--color-bg-main);
+  color: var(--color-fg-main);
+  border: 2px solid var(--color-border-main);
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+}
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-main);
+}
+
+/* Crew sidebar */
+.crew-sidebar {
+  display: none;
+  flex-direction: column;
+  width: 150px;
+  border-right: 1px solid var(--color-border-main);
+  padding-right: 1rem;
+}
+@media (min-width: 768px) {
+  .crew-sidebar.visible {
+    display: flex;
+  }
+}
+
+.sidebar-btn {
+  text-align: left;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+.sidebar-btn:hover {
+  background: var(--color-fg-main);
+  color: var(--color-bg-main);
+}
+
+/* Crew list */
+.crew-header {
+  display: grid;
+  grid-template-columns: 50px 1fr 100px 1fr;
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-border-main);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+@media (min-width: 768px) {
+  .crew-header {
+    font-size: 1rem;
+  }
+}
+
+.crew-row {
+  display: grid;
+  grid-template-columns: 50px 1fr 100px 1fr;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: var(--font-en);
+  font-size: 0.875rem;
+}
+.crew-row:hover {
+  background: var(--color-fg-main);
+  color: var(--color-bg-main);
+}
+@media (min-width: 768px) {
+  .crew-row {
+    font-size: 1rem;
+  }
+}
+
+/* Fate grid */
+.fate-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  align-content: start;
+}
+@media (min-width: 768px) {
+  .fate-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.fate-cell {
+  border: 1px solid var(--color-border-main);
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fate-cell:hover {
+  background: var(--color-fg-main);
+  color: var(--color-bg-main);
+}
+
+/* ===== Animations ===== */
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s;
+  animation-iteration-count: 1;
+}

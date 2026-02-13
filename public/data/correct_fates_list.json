@@ -1,0 +1,747 @@
+{
+    "face_01.webp": [
+        {
+            "cause": "被撕裂致死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_02.webp": [
+        {
+            "cause": "被撕裂致死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被压死",
+            "weapon": "野兽",
+            "offender_id": null
+        },
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        },
+        {
+            "cause": "被吃掉",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_03.webp": [
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_04.webp": [
+        {
+            "cause": "自杀",
+            "weapon": "枪",
+            "offender_id": null
+        }
+    ],
+    "face_05.webp": [
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被利爪抓死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_06.webp": [
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_07.webp": [
+        {
+            "cause": "重击",
+            "weapon": "尾巴",
+            "offender_id": null
+        },
+        {
+            "cause": "被压死",
+            "weapon": "野兽",
+            "offender_id": null
+        },
+        {
+            "cause": "被棍棒打死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_08.webp": [
+        {
+            "cause": "被射死",
+            "weapon": "炮",
+            "offender_id": -2
+        },
+        {
+            "cause": "被射死",
+            "weapon": "炮",
+            "offender_id": 52
+        },
+        {
+            "cause": "被炸死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_09.webp": [
+        {
+            "cause": "被射死",
+            "weapon": "枪",
+            "offender_id": 5
+        }
+    ],
+    "face_10.webp": [
+        {
+            "cause": "被射死",
+            "weapon": "枪",
+            "offender_id": 1
+        }
+    ],
+    "face_11.webp": [
+        {
+            "cause": "被射死",
+            "weapon": "枪",
+            "offender_id": 25
+        }
+    ],
+    "face_12.webp": [
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_13.webp": [
+        {
+            "cause": "被棍棒打死",
+            "weapon": null,
+            "offender_id": 56
+        }
+    ],
+    "face_14.webp": [
+        {
+            "cause": "被炸死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_15.webp": [
+        {
+            "cause": "被小刀杀死",
+            "weapon": null,
+            "offender_id": 15
+        }
+    ],
+    "face_16.webp": [
+        {
+            "cause": "被烧死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被剑杀死",
+            "weapon": null,
+            "offender_id": 33
+        }
+    ],
+    "face_17.webp": [
+        {
+            "cause": "被压死",
+            "weapon": "索具",
+            "offender_id": null
+        },
+        {
+            "cause": "被压死",
+            "weapon": "野兽",
+            "offender_id": null
+        },
+        {
+            "cause": "被棍棒打死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_18.webp": [
+        {
+            "cause": "被小刀杀死",
+            "weapon": null,
+            "offender_id": 3
+        }
+    ],
+    "face_19.webp": [
+        {
+            "cause": "幸存",
+            "weapon": "非洲",
+            "offender_id": null
+        }
+    ],
+    "face_20.webp": [
+        {
+            "cause": "幸存",
+            "weapon": "非洲",
+            "offender_id": null
+        }
+    ],
+    "face_21.webp": [
+        {
+            "cause": "被勒死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被压死",
+            "weapon": "野兽",
+            "offender_id": null
+        }
+    ],
+    "face_22.webp": [
+        {
+            "cause": "被利爪抓死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被勒死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_23.webp": [
+        {
+            "cause": "被烧死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被毒死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被电死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_24.webp": [
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_25.webp": [
+        {
+            "cause": "被射死",
+            "weapon": "枪",
+            "offender_id": 56
+        }
+    ],
+    "face_26.webp": [
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        },
+        {
+            "cause": "被吃掉",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_27.webp": [
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被勒死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被利爪抓死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        }
+    ],
+    "face_28.webp": [
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        },
+        {
+            "cause": "被吃掉",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_29.webp": [
+        {
+            "cause": "被棍棒打死",
+            "weapon": null,
+            "offender_id": 48
+        }
+    ],
+    "face_30.webp": [
+        {
+            "cause": "病死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_31.webp": [
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被勒死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被利爪抓死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        }
+    ],
+    "face_32.webp": [
+        {
+            "cause": "被剑杀死",
+            "weapon": null,
+            "offender_id": 28
+        },
+        {
+            "cause": "被撕裂致死",
+            "weapon": null,
+            "offender_id": 28
+        }
+    ],
+    "face_33.webp": [
+        {
+            "cause": "被压死",
+            "weapon": "火炮",
+            "offender_id": null
+        },
+        {
+            "cause": "被压死",
+            "weapon": "野兽",
+            "offender_id": null
+        }
+    ],
+    "face_34.webp": [
+        {
+            "cause": "被压死",
+            "weapon": "野兽",
+            "offender_id": null
+        },
+        {
+            "cause": "被压死",
+            "weapon": "货物",
+            "offender_id": null
+        },
+        {
+            "cause": "摔死",
+            "weapon": "楼梯",
+            "offender_id": null
+        }
+    ],
+    "face_35.webp": [
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        },
+        {
+            "cause": "被吃掉",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被撕裂致死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被压死",
+            "weapon": "野兽",
+            "offender_id": null
+        }
+    ],
+    "face_36.webp": [
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_37.webp": [
+        {
+            "cause": "被小刀杀死",
+            "weapon": null,
+            "offender_id": 1
+        }
+    ],
+    "face_38.webp": [
+        {
+            "cause": "病死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_39.webp": [
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        },
+        {
+            "cause": "被吃掉",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_40.webp": [
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_41.webp": [
+        {
+            "cause": "被射死",
+            "weapon": "炮",
+            "offender_id": -2
+        },
+        {
+            "cause": "被射死",
+            "weapon": "炮",
+            "offender_id": 52
+        },
+        {
+            "cause": "被炸死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        },
+        {
+            "cause": "被吃掉",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_42.webp": [
+        {
+            "cause": "被压死",
+            "weapon": "货物",
+            "offender_id": null
+        }
+    ],
+    "face_43.webp": [
+        {
+            "cause": "被烧死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被毒死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被电死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_44.webp": [
+        {
+            "cause": "被剑杀死",
+            "weapon": null,
+            "offender_id": 45
+        }
+    ],
+    "face_45.webp": [
+        {
+            "cause": "被小刀杀死",
+            "weapon": null,
+            "offender_id": 24
+        }
+    ],
+    "face_46.webp": [
+        {
+            "cause": "被压死",
+            "weapon": "火炮",
+            "offender_id": null
+        }
+    ],
+    "face_47.webp": [
+        {
+            "cause": "幸存",
+            "weapon": "非洲",
+            "offender_id": null
+        }
+    ],
+    "face_48.webp": [
+        {
+            "cause": "被射死",
+            "weapon": "枪",
+            "offender_id": 7
+        }
+    ],
+    "face_49.webp": [
+        {
+            "cause": "幸存",
+            "weapon": "非洲",
+            "offender_id": null
+        }
+    ],
+    "face_50.webp": [
+        {
+            "cause": "被斩首",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被利爪抓死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被勒死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_51.webp": [
+        {
+            "cause": "被电死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_52.webp": [
+        {
+            "cause": "被射死",
+            "weapon": "枪",
+            "offender_id": 21
+        }
+    ],
+    "face_53.webp": [
+        {
+            "cause": "被撕裂致死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被压死",
+            "weapon": "野兽",
+            "offender_id": null
+        }
+    ],
+    "face_54.webp": [
+        {
+            "cause": "被斩首",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被利爪抓死",
+            "weapon": null,
+            "offender_id": null
+        },
+        {
+            "cause": "被勒死",
+            "weapon": null,
+            "offender_id": -2
+        }
+    ],
+    "face_55.webp": [
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        }
+    ],
+    "face_56.webp": [
+        {
+            "cause": "被射死",
+            "weapon": "枪",
+            "offender_id": 3
+        }
+    ],
+    "face_57.webp": [
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_58.webp": [
+        {
+            "cause": "被溺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "摔死",
+            "weapon": "船上",
+            "offender_id": null
+        },
+        {
+            "cause": "被吃掉",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被撕裂致死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被压死",
+            "weapon": "野兽",
+            "offender_id": null
+        }
+    ],
+    "face_59.webp": [
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": -2
+        },
+        {
+            "cause": "被尖刺刺死",
+            "weapon": null,
+            "offender_id": null
+        }
+    ],
+    "face_60.webp": [
+        {
+            "cause": "被棍棒打死",
+            "weapon": null,
+            "offender_id": 1
+        },
+        {
+            "cause": "被矛刺死",
+            "weapon": null,
+            "offender_id": 1
+        }
+    ]
+}
