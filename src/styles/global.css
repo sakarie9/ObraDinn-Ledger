@@ -7,7 +7,13 @@
 
   --font-en: "Crimson Text", serif;
   /* Add fallback fonts to ensure punctuation renders correctly across browsers (especially Firefox) */
-  --font-cn: "Ma Shan Zheng", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:
+    "Ma Shan Zheng", "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
+    sans-serif;
+  /* Mixed font: Crimson Text for Latin, Ma Shan Zheng for CJK - browser auto-selects based on Unicode */
+  --font-mixed:
+    "Crimson Text", "Ma Shan Zheng", "Noto Sans SC", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
 }
 
 @layer base {
@@ -37,6 +43,13 @@
 .font-cn {
   font-family: var(--font-cn);
   /* Prevent font loading from causing layout shift */
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Mixed font for static mixed CJK/Latin content without JS splitting */
+.font-mixed {
+  font-family: var(--font-mixed);
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -14,7 +14,15 @@ const faces = Array.from({ length: 60 }, (_, i) => {
       <h1 class="text-xl sm:text-2xl font-bold font-cn">
         《奥伯拉丁》命运勘验
       </h1>
-      <button id="reset-btn" class="btn-lg cursor-pointer">重置</button>
+      <div class="flex gap-3 items-center">
+        <a
+          href={`${import.meta.env.BASE_URL}/about`}
+          class="text-[#AAAA88] hover:text-[#DDDDAA] transition-colors text-sm sm:text-base"
+        >
+          关于
+        </a>
+        <button id="reset-btn" class="btn-lg cursor-pointer">重置</button>
+      </div>
     </div>
 
     <!-- Grid -->
@@ -46,9 +54,43 @@ const faces = Array.from({ length: 60 }, (_, i) => {
       }
     </div>
 
-    <div class="text-center text-sm text-[#AAAA88] mt-10">
-      <p>点击头像进入详情页</p>
-    </div>
+    <!-- Footer -->
+    <footer
+      class="border-t border-[#AAAA88] mt-16 pt-8 pb-8 text-center text-s text-[#AAAA88] font-mixed"
+    >
+      <div class="space-y-3 max-w-lg mx-auto">
+        <p>
+          <a
+            href={`${import.meta.env.BASE_URL}/about`}
+            class="hover:text-[#DDDDAA] transition-colors"
+          >
+            关于本项目
+          </a>
+          {" • "}
+          <a
+            href="https://github.com/sakarie9/ObraDinn-Ledger"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-[#DDDDAA] transition-colors"
+          >
+            GitHub 仓库
+          </a>
+          {" • "}
+          <a
+            href="https://github.com/Yide-Zhang/ObraDinn-HintsAndCheck"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-[#DDDDAA] transition-colors"
+          >
+            原始项目
+          </a>
+        </p>
+        <p>© 2026 • 《奥伯拉丁的回归》命运勘验工具</p>
+        <p class="text-[#777766]">
+          游戏资源版权归 Lucas Pope 所有 • 本项目仅供学习交流使用
+        </p>
+      </div>
+    </footer>
   </div>
 </Layout>
 
