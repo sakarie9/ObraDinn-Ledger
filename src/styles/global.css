@@ -472,6 +472,124 @@
   color: var(--color-bg-main);
 }
 
+/* ===== Mobile Layout Optimizations ===== */
+
+/* Sticky header: top bar + tabs combined */
+.mobile-sticky-header {
+  /* static on desktop */
+}
+@media (max-width: 767px) {
+  .mobile-sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--color-bg-main);
+    padding-bottom: 0;
+    border-bottom: 1px solid rgba(170, 170, 136, 0.3);
+    /* Counteract parent flex gap so sticky top:0 truly sticks to the top */
+    margin-top: -1.25rem;
+    padding-top: 1.25rem;
+  }
+}
+
+/* face-interaction needs block display for padding-bottom to work */
+face-interaction {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  /* Smaller face image on mobile */
+  .face-img {
+    max-height: 150px;
+  }
+
+  /* Hint panels: auto height, natural page scroll */
+  .hint-panel {
+    height: auto;
+    /* Keep containment but allow natural sizing */
+  }
+
+  /* Hint list: remove inner scroll, let page scroll handle it */
+  .hint-list {
+    overflow-y: visible;
+    flex-grow: 0;
+  }
+
+  /* Hide inline hint buttons on mobile — actions are in floating bottom bar */
+  #identity-hint-btn,
+  #fate-hint-btn {
+    display: none !important;
+  }
+
+  /* Scroll margin so scrollIntoView doesn't hide behind the action bar */
+  .hint-panel {
+    scroll-margin-bottom: 5rem;
+  }
+}
+
+/* Mobile floating action bar */
+.mobile-action-bar {
+  display: none;
+}
+@media (max-width: 767px) {
+  .mobile-action-bar {
+    display: flex;
+    /* Use sticky instead of fixed to avoid being hidden behind
+       mobile browser bottom address bars (Chrome, Safari, etc.) */
+    position: sticky;
+    bottom: 0;
+    z-index: 40;
+    padding: 0.625rem 1rem;
+    padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
+    gap: 0.75rem;
+    background: var(--color-bg-main);
+    border-top: 1px solid var(--color-border-main);
+    justify-content: center;
+    align-items: center;
+    /* Pull out of parent padding so bar spans full width */
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
+    padding-left: 2.25rem;
+    padding-right: 2.25rem;
+  }
+
+  .btn-action-float {
+    flex: 1;
+    max-width: 12rem;
+    border: 1px solid var(--color-fg-main);
+    padding: 0.625rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-family: var(--font-cn);
+    font-size: 1rem;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+    text-align: center;
+    background: transparent;
+    color: var(--color-fg-main);
+  }
+  .btn-action-float:hover,
+  .btn-action-float:active {
+    background: var(--color-fg-main);
+    color: var(--color-bg-main);
+  }
+  .btn-action-float.accent {
+    background: var(--color-fg-main);
+    color: var(--color-bg-main);
+  }
+  .btn-action-float.accent:active {
+    opacity: 0.8;
+  }
+
+  .mobile-hint-done {
+    color: #aaaa88;
+    font-style: italic;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+}
+
 /* ===== Animations ===== */
 
 @keyframes shake {

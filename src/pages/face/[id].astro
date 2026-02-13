@@ -42,35 +42,17 @@ const preloadText = [
       <span class="font-cn">{preloadText}</span>
     </div>
     <div class="flex flex-col gap-5 max-w-5xl mx-auto">
-      <!-- Top Bar -->
-      <div class="flex justify-between items-center">
-        <a href={`${import.meta.env.BASE_URL}/`} class="back-link"
-          >&lt;&lt; 返回列表</a
-        >
-        <button id="reset-btn" class="btn-lg cursor-pointer">重置</button>
-      </div>
-
-      <!-- Main Interaction Area -->
-      <div
-        class="flex flex-col md:flex-row items-center md:items-start justify-center gap-6 md:gap-10 pb-8"
-      >
-        <!-- Image (Middle Column on desktop, First on mobile) -->
-        <div
-          class="shrink-0 face-img-container order-1 md:order-2 md:sticky md:top-4 z-10 pt-2 md:bg-transparent md:pt-0"
-        >
-          <img
-            src={`${import.meta.env.BASE_URL}/FacesHi/${filename}`}
-            alt={filename}
-            class="face-img"
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-          />
+      <!-- Sticky Header: Top Bar + Mobile Tabs -->
+      <div class="mobile-sticky-header">
+        <div class="flex justify-between items-center">
+          <a href={`${import.meta.env.BASE_URL}/`} class="back-link"
+            >&lt;&lt; 返回列表</a
+          >
+          <button id="reset-btn" class="btn-lg cursor-pointer">重置</button>
         </div>
-
-        <!-- Mobile Tabs (Order 2 on mobile) -->
+        <!-- Mobile Tabs -->
         <div
-          class="flex md:hidden w-full border-b border-[var(--color-border-main)] mb-6 order-2 sticky top-0 z-20 bg-[var(--color-bg-main)]"
+          class="flex md:hidden w-full border-b border-[var(--color-border-main)] mt-2"
         >
           <button
             id="tab-identity"
@@ -87,11 +69,30 @@ const preloadText = [
             确认命运
           </button>
         </div>
+      </div>
+
+      <!-- Main Interaction Area -->
+      <div
+        class="flex flex-col md:flex-row items-center md:items-start justify-center gap-6 md:gap-10 pb-8"
+      >
+        <!-- Image (Middle Column on desktop, First on mobile) -->
+        <div
+          class="shrink-0 face-img-container md:order-2 md:sticky md:top-4 z-10 md:bg-transparent"
+        >
+          <img
+            src={`${import.meta.env.BASE_URL}/FacesHi/${filename}`}
+            alt={filename}
+            class="face-img"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </div>
 
         <!-- Identity Section (Left Column) -->
         <div
           id="section-identity"
-          class="flex flex-col gap-6 md:w-1/3 order-3 md:order-1 w-full md:flex"
+          class="flex flex-col gap-6 md:w-1/3 md:order-1 w-full md:flex"
         >
           <!-- Identity Widget -->
           <div id="identity-widget" class="widget">
@@ -117,7 +118,7 @@ const preloadText = [
         <!-- Fate Section (Right Column) -->
         <div
           id="section-fate"
-          class="flex flex-col gap-6 md:w-1/3 order-3 md:order-3 w-full hidden md:flex"
+          class="flex flex-col gap-6 md:w-1/3 md:order-3 w-full hidden md:flex"
         >
           <!-- Fate Widget -->
           <div id="fate-widget" class="widget">
@@ -140,6 +141,17 @@ const preloadText = [
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Mobile Action Bar -->
+    <div id="mobile-action-bar" class="mobile-action-bar">
+      <button id="mobile-hint-btn" class="btn-action-float">获取提示</button>
+      <span id="mobile-hint-done" class="mobile-hint-done hidden"
+        >已显示所有提示</span
+      >
+      <button id="mobile-check-btn" class="btn-action-float accent hidden"
+        >查验</button
+      >
     </div>
 
     <!-- Crew Modal -->
@@ -231,6 +243,9 @@ const preloadText = [
     fateList: HTMLElement | null;
     fatePage: HTMLElement | null;
     fateTitle: HTMLElement | null;
+    mobileHintBtn: HTMLButtonElement | null;
+    mobileHintDone: HTMLElement | null;
+    mobileCheckBtn: HTMLButtonElement | null;
   }
 
   interface FaceHints {
@@ -403,6 +418,9 @@ const preloadText = [
         fateList: q("#fate-list"),
         fatePage: q("#fate-page-info"),
         fateTitle: q("#fate-modal-title"),
+        mobileHintBtn: q("#mobile-hint-btn"),
+        mobileHintDone: q("#mobile-hint-done"),
+        mobileCheckBtn: q("#mobile-check-btn"),
       };
     }
 
@@ -428,6 +446,7 @@ const preloadText = [
       if (this.els.sectionFate) {
         this.els.sectionFate.classList.toggle("hidden", isIdentity);
       }
+      this.renderMobileBar();
     }
 
     handleClick(e: Event): void {
@@ -462,6 +481,17 @@ const preloadText = [
       }
       if (t.closest("#fate-hint-btn")) {
         this.handleHint("fate");
+        return;
+      }
+
+      // Mobile action bar buttons
+      if (t.closest("#mobile-hint-btn")) {
+        this.handleHint(this.getActiveTab());
+        return;
+      }
+      if (t.closest("#mobile-check-btn")) {
+        if (this.getActiveTab() === "identity") this.checkIdentity();
+        else this.checkFate();
         return;
       }
 
@@ -594,6 +624,7 @@ const preloadText = [
         isIdentity ? this.els.idHintMsg : this.els.fateHintMsg,
         true, // Scroll when user clicks hint button
       );
+      this.renderMobileBar();
     }
 
     // ===== Verification =====
@@ -684,6 +715,7 @@ const preloadText = [
       this.renderIdentityWidget();
       this.renderFateWidget();
       this.renderHints();
+      this.renderMobileBar();
     }
 
     renderIdentityWidget(): void {
@@ -875,6 +907,65 @@ const preloadText = [
       }
       flush();
       parent.appendChild(fragment);
+    }
+
+    // ===== Mobile Action Bar =====
+
+    private getActiveTab(): "identity" | "fate" {
+      return this.els.sectionIdentity?.classList.contains("hidden")
+        ? "fate"
+        : "identity";
+    }
+
+    renderMobileBar(): void {
+      if (!this.els.mobileHintBtn || !this.state) return;
+
+      const isIdentity = this.getActiveTab() === "identity";
+      const { status, guessed_id, identity, fate_status, guessed_fate, fate } =
+        this.state;
+
+      // Determine hint state for active tab
+      const hints = isIdentity
+        ? this.currentFaceData?.identity_hints || []
+        : this.currentFaceData?.fate_hints || [];
+      const hintCount = isIdentity ? identity : fate;
+      const isVerified = isIdentity
+        ? status === "verified"
+        : fate_status === "verified";
+      const allHintsShown = hintCount >= hints.length;
+
+      // Hint button visibility
+      const showHintBtn = !allHintsShown && !isVerified;
+      this.els.mobileHintBtn.classList.toggle("hidden", !showHintBtn);
+
+      // Hint done message
+      if (this.els.mobileHintDone) {
+        this.els.mobileHintDone.classList.toggle(
+          "hidden",
+          !allHintsShown || isVerified,
+        );
+      }
+
+      // Check button visibility
+      let showCheck = false;
+      if (!isVerified) {
+        if (isIdentity) {
+          showCheck = !!guessed_id;
+        } else {
+          const causeObj = this.fatesList.find(
+            (c) => c.id === guessed_fate.cause_id,
+          );
+          if (causeObj && guessed_fate.cause_id !== 1) {
+            const weaponOk = !causeObj.has_weapon || guessed_fate.weapon;
+            const offenderOk =
+              !causeObj.requires_offender || guessed_fate.offender_id;
+            showCheck = !!(weaponOk && offenderOk);
+          }
+        }
+      }
+      if (this.els.mobileCheckBtn) {
+        this.els.mobileCheckBtn.classList.toggle("hidden", !showCheck);
+      }
     }
 
     // ===== Modals =====
