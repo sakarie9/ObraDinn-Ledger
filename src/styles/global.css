@@ -123,44 +123,11 @@
     inset 0 0 20px rgba(229, 254, 255, 0.1);
 }
 
-/* Face card loading state */
-.face-card-loader {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.3);
-  opacity: 1;
-  transition: opacity 0.3s ease-out;
-  pointer-events: none;
-}
-
-.face-card.loaded .face-card-loader {
-  opacity: 0;
-}
-
-.face-card-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid rgba(170, 170, 136, 0.2);
-  border-top-color: var(--color-fg-main);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
 .face-card-img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  opacity: 0;
-  transition:
-    opacity 0.3s ease-out,
-    transform 0.15s;
-}
-
-.face-card.loaded .face-card-img {
-  opacity: 1;
+  transition: transform 0.15s;
 }
 
 .face-card:hover .face-card-img {
@@ -700,15 +667,6 @@ face-interaction {
 }
 
 /* ===== Animations ===== */
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
 @keyframes fadeIn {
   from {

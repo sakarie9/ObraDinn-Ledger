@@ -2,6 +2,12 @@
 import Layout from "../../layouts/Layout.astro";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { Image } from "astro:assets";
+
+const faceImages = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/faces/*.webp",
+  { eager: true },
+);
 
 export async function getStaticPaths() {
   const dataPath = path.join(process.cwd(), "public/data/faces_data.json");
@@ -21,6 +27,8 @@ export async function getStaticPaths() {
 
 const { id } = Astro.params;
 const { filename, faceData } = Astro.props;
+const imageSrc = faceImages[`/src/assets/faces/${filename}`].default;
+
 const hintsData = JSON.stringify({
   identity_hints: faceData.identity_hints,
   fate_hints: faceData.fate_hints,
@@ -79,8 +87,8 @@ const preloadText = [
         <div
           class="shrink-0 face-img-container md:order-2 md:sticky md:top-4 z-10 md:bg-transparent"
         >
-          <img
-            src={`${import.meta.env.BASE_URL}/FacesHi/${filename}`}
+          <Image
+            src={imageSrc}
             alt={filename}
             class="face-img"
             loading="eager"
