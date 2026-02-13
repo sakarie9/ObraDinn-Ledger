@@ -512,23 +512,42 @@ const hintsData = JSON.stringify({
           }
 
           const labelClass = `text-xl ${isVerified ? 'font-cn font-bold' : 'font-hand'}`;
-          let textHTML = `<span class="${labelClass}">${part1Text}</span>`;
 
+          let offName = null;
           if (causeObj && causeObj.requires_offender) {
-              let offName = '不详';
+              offName = '不详';
               if (guessed_fate.offender_id === -1) offName = '敌人';
               else if (guessed_fate.offender_id === -2) offName = '野兽';
               else if (guessed_fate.offender_id) {
                   const crew = this.crewList.find(c => c.id === guessed_fate.offender_id);
                   if (crew) offName = crew.name;
               }
-              textHTML += `<span class="${labelClass} ml-1 ${!isVerified ? 'underline cursor-pointer hover:text-white' : ''}" id="offender-label">${offName}</span>`;
           }
 
           if(this.els.fateContent) {
-              if (this.lastFateHTML !== textHTML) {
-                   this.els.fateContent.innerHTML = textHTML;
-                   this.lastFateHTML = textHTML;
+              let span1 = this.els.fateContent.querySelector('span:first-child');
+              if (!span1) {
+                  this.els.fateContent.innerHTML = '';
+                  span1 = document.createElement('span');
+                  this.els.fateContent.appendChild(span1);
+              }
+
+              if (span1.textContent !== part1Text) span1.textContent = part1Text;
+              if (span1.className !== labelClass) span1.className = labelClass;
+
+              let span2 = this.els.fateContent.querySelector('#offender-label');
+              if (offName !== null) {
+                  if (!span2) {
+                      span2 = document.createElement('span');
+                      span2.id = 'offender-label';
+                      this.els.fateContent.appendChild(span2);
+                  }
+                  if (span2.textContent !== offName) span2.textContent = offName;
+
+                  const offClass = `${labelClass} ml-1 ${!isVerified ? 'underline cursor-pointer hover:text-white' : ''}`;
+                  if (span2.className !== offClass) span2.className = offClass;
+              } else {
+                  if (span2) span2.remove();
               }
           }
 
@@ -586,6 +605,11 @@ const hintsData = JSON.stringify({
               }
               // Only scroll if we added something
               listEl.scrollTop = listEl.scrollHeight;
+          } else if (listEl.childElementCount > count) {
+              // Handle reduction (e.g. reset)
+              while (listEl.childElementCount > count) {
+                  listEl.lastElementChild.remove();
+              }
           }
 
           const isDone = count >= allHints.length;
