@@ -252,8 +252,19 @@ const preloadText = [
     fatePageIdx = 0;
     crewMode: "identity" | "offender" = "identity";
 
-    private static readonly ITEMS_PER_PAGE_CREW = 10;
-    private static readonly ITEMS_PER_PAGE_FATE = 9;
+    // Dynamic items per page based on screen size
+    get itemsPerPageCrew(): number {
+      return this.isMobile() ? 6 : 10;
+    }
+
+    get itemsPerPageFate(): number {
+      return this.isMobile() ? 6 : 9;
+    }
+
+    private isMobile(): boolean {
+      // Match Tailwind's md breakpoint (768px)
+      return !window.matchMedia("(min-width: 768px)").matches;
+    }
 
     connectedCallback(): void {
       setTimeout(() => this.init(), 0);
@@ -275,6 +286,23 @@ const preloadText = [
 
         this.cacheElements();
         this.addEventListener("click", (e) => this.handleClick(e));
+
+        // Handle window resize for responsive pagination
+        let resizeTimeout: number;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = window.setTimeout(() => {
+            // Reset page index if modal is open to avoid out-of-bounds
+            if (this.els.crewModal?.open) {
+              this.crewPageIdx = 0;
+              this.renderCrewList();
+            }
+            if (this.els.fateModal?.open) {
+              this.fatePageIdx = 0;
+              this.renderFateList();
+            }
+          }, 150);
+        });
 
         // Preload fonts and load data in parallel.
         // preloadFonts() uses document.fonts.load() with ALL hint text to
@@ -863,14 +891,9 @@ const preloadText = [
       this.els.crewList.innerHTML = "";
 
       const sorted = [...this.crewList].sort((a, b) => a.id - b.id);
-      const start = this.crewPageIdx * FaceInteraction.ITEMS_PER_PAGE_CREW;
-      const page = sorted.slice(
-        start,
-        start + FaceInteraction.ITEMS_PER_PAGE_CREW,
-      );
-      const totalPages = Math.ceil(
-        sorted.length / FaceInteraction.ITEMS_PER_PAGE_CREW,
-      );
+      const start = this.crewPageIdx * this.itemsPerPageCrew;
+      const page = sorted.slice(start, start + this.itemsPerPageCrew);
+      const totalPages = Math.ceil(sorted.length / this.itemsPerPageCrew);
 
       this.setText(
         this.els.crewPage,
@@ -887,9 +910,7 @@ const preloadText = [
     }
 
     pageCrewList(dir: number): void {
-      const total = Math.ceil(
-        this.crewList.length / FaceInteraction.ITEMS_PER_PAGE_CREW,
-      );
+      const total = Math.ceil(this.crewList.length / this.itemsPerPageCrew);
       this.crewPageIdx = (this.crewPageIdx + dir + total) % total;
       this.renderCrewList();
     }
@@ -916,14 +937,9 @@ const preloadText = [
 
       const items = weapons || this.fatesList;
       const isWeapon = !!weapons;
-      const start = this.fatePageIdx * FaceInteraction.ITEMS_PER_PAGE_FATE;
-      const page = items.slice(
-        start,
-        start + FaceInteraction.ITEMS_PER_PAGE_FATE,
-      );
-      const totalPages = Math.ceil(
-        items.length / FaceInteraction.ITEMS_PER_PAGE_FATE,
-      );
+      const start = this.fatePageIdx * this.itemsPerPageFate;
+      const page = items.slice(start, start + this.itemsPerPageFate);
+      const totalPages = Math.ceil(items.length / this.itemsPerPageFate);
 
       this.setText(
         this.els.fatePage,
@@ -967,9 +983,7 @@ const preloadText = [
       const items = isCauses
         ? this.fatesList
         : this.fatesList.find((c) => c.label === title)?.weapons || [];
-      const total = Math.ceil(
-        items.length / FaceInteraction.ITEMS_PER_PAGE_FATE,
-      );
+      const total = Math.ceil(items.length / this.itemsPerPageFate);
       if (total === 0) return;
       this.fatePageIdx = (this.fatePageIdx + dir + total) % total;
       this.renderFateList(isCauses ? null : items);
