@@ -6,7 +6,8 @@
   --color-border-main: #aaaa88;
 
   --font-en: "Crimson Text", serif;
-  --font-cn: "Ma Shan Zheng", cursive;
+  /* Add fallback fonts to ensure punctuation renders correctly across browsers (especially Firefox) */
+  --font-cn: "Ma Shan Zheng", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 @layer base {
