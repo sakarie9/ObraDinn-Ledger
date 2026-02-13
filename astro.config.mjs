@@ -1,16 +1,30 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+// @ts-ignore - Node.js builtin module available at config runtime
+import { execSync } from "node:child_process";
 import tailwindcss from "@tailwindcss/vite";
 import AstroPWA from "@vite-pwa/astro";
 
 // 配置 base URL - 只需在此处修改
 const BASE_PATH = "/ObraDinn-Ledger";
 
+let COMMIT_HASH = "unknown";
+try {
+  COMMIT_HASH = execSync("git rev-parse --short HEAD", {
+    encoding: "utf8",
+  }).trim();
+} catch {
+  // no-op: fallback when git metadata is unavailable
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://sakarie9.github.io",
   base: BASE_PATH,
   vite: {
+    define: {
+      __COMMIT_HASH__: JSON.stringify(COMMIT_HASH),
+    },
     plugins: [tailwindcss()],
   },
   integrations: [

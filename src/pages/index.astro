@@ -1,6 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
+const commitHash = __COMMIT_HASH__;
+
 const faces = Array.from({ length: 60 }, (_, i) => {
   const num = (i + 1).toString().padStart(2, "0");
   return `face_${num}.webp`;
@@ -89,7 +91,7 @@ const faces = Array.from({ length: 60 }, (_, i) => {
             原始项目
           </a>
         </p>
-        <p>© 2026 • 《奥伯拉丁的回归》命运勘验工具</p>
+        <p>© 2026 • 《奥伯拉丁的回归》命运勘验工具 • {commitHash}</p>
         <p class="text-[#777766]">
           游戏资源版权归 Lucas Pope 所有 • 本项目仅供学习交流使用
         </p>
