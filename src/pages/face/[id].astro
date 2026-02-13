@@ -474,10 +474,13 @@ const hintsData = JSON.stringify({
           }
 
           if(this.els.idLabel) {
-              this.els.idLabel.textContent = text;
-              this.els.idLabel.className = 'text-xl';
-              if (isVerified) this.els.idLabel.classList.add('font-cn', 'font-bold');
-              else this.els.idLabel.classList.add('font-hand');
+              if (this.els.idLabel.textContent !== text) {
+                  this.els.idLabel.textContent = text;
+              }
+              const targetClass = `text-xl ${isVerified ? 'font-cn font-bold' : 'font-hand'}`;
+              if (this.els.idLabel.className !== targetClass) {
+                  this.els.idLabel.className = targetClass;
+              }
           }
 
           if (this.els.idWidget) {
@@ -522,7 +525,12 @@ const hintsData = JSON.stringify({
               textHTML += `<span class="${labelClass} ml-1 ${!isVerified ? 'underline cursor-pointer hover:text-white' : ''}" id="offender-label">${offName}</span>`;
           }
 
-          if(this.els.fateContent) this.els.fateContent.innerHTML = textHTML;
+          if(this.els.fateContent) {
+              if (this.lastFateHTML !== textHTML) {
+                   this.els.fateContent.innerHTML = textHTML;
+                   this.lastFateHTML = textHTML;
+              }
+          }
 
           if(this.els.fateWidget) {
               if (isVerified) {
@@ -567,26 +575,30 @@ const hintsData = JSON.stringify({
               listEl.innerHTML = '';
           }
 
-          for (let i = listEl.childElementCount; i < count; i++) {
-              if (i < allHints.length) {
-                  const div = document.createElement('div');
-                  div.className = 'font-cn';
-                  div.innerHTML = this.processMixedText(allHints[i]);
-                  listEl.appendChild(div);
+          if (listEl.childElementCount < count) {
+              for (let i = listEl.childElementCount; i < count; i++) {
+                  if (i < allHints.length) {
+                      const div = document.createElement('div');
+                      div.className = 'font-cn';
+                      div.innerHTML = this.processMixedText(allHints[i]);
+                      listEl.appendChild(div);
+                  }
               }
+              // Only scroll if we added something
+              listEl.scrollTop = listEl.scrollHeight;
           }
 
-          if (count >= allHints.length) {
-              if(btnEl) btnEl.classList.add('hidden');
-              if(doneEl) doneEl.classList.remove('hidden');
-              if(msgEl) msgEl.classList.remove('hidden');
+          const isDone = count >= allHints.length;
+
+          if (isDone) {
+              if (btnEl && !btnEl.classList.contains('hidden')) btnEl.classList.add('hidden');
+              if (doneEl && doneEl.classList.contains('hidden')) doneEl.classList.remove('hidden');
+              if (msgEl && msgEl.classList.contains('hidden')) msgEl.classList.remove('hidden');
           } else {
-              if(btnEl) btnEl.classList.remove('hidden');
-              if(doneEl) doneEl.classList.add('hidden');
-              if(msgEl) msgEl.classList.add('hidden');
+              if (btnEl && btnEl.classList.contains('hidden')) btnEl.classList.remove('hidden');
+              if (doneEl && !doneEl.classList.contains('hidden')) doneEl.classList.add('hidden');
+              if (msgEl && !msgEl.classList.contains('hidden')) msgEl.classList.add('hidden');
           }
-
-          listEl.scrollTop = listEl.scrollHeight;
       }
 
       processMixedText(text) {
