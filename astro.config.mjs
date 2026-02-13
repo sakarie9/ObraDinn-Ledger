@@ -24,8 +24,11 @@ export default defineConfig({
         theme_color: "#333319",
         background_color: "#333319",
         display: "standalone",
+        orientation: "portrait-primary",
         scope: `${BASE_PATH}/`,
         start_url: `${BASE_PATH}/`,
+        categories: ["games", "entertainment"],
+        lang: "zh-CN",
         icons: [
           {
             src: `${BASE_PATH}/icon-192.png`,

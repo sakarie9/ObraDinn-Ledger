@@ -20,8 +20,8 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link
       rel="icon"
-      type="image/webp"
-      href={`${import.meta.env.BASE_URL}/icon.webp`}
+      type="image/png"
+      href={`${import.meta.env.BASE_URL}/icon-192.png`}
     />
     <meta name="generator" content={Astro.generator} />
 
@@ -29,7 +29,11 @@ const { title } = Astro.props;
     <meta name="theme-color" content="#333319" />
     <link
       rel="apple-touch-icon"
-      href={`${import.meta.env.BASE_URL}/icon.webp`}
+      href={`${import.meta.env.BASE_URL}/icon-512.png`}
+    />
+    <link
+      rel="manifest"
+      href={`${import.meta.env.BASE_URL}/manifest.webmanifest`}
     />
 
     <!-- Fonts -->
@@ -44,6 +48,7 @@ const { title } = Astro.props;
 
     <title>{title}</title>
     <ClientRouter />
+    <script is:inline src={`${import.meta.env.BASE_URL}/registerSW.js`}></script>
   </head>
   <body>
     <div id="app-container" class="w-full max-w-[1200px] p-5">
