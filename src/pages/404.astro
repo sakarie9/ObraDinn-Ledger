@@ -1,0 +1,31 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="页面走失了 - 《奥伯拉丁》命运勘验">
+  <main class="min-h-[70vh] flex items-center justify-center px-4">
+    <section
+      class="w-full max-w-2xl border border-[#AAAA88] rounded-md bg-black/25 p-8 md:p-10 text-center"
+    >
+      <p class="font-en text-[#AAAA88] tracking-[0.2em] text-sm mb-3">ERROR 404</p>
+      <h1 class="font-cn text-4xl md:text-5xl text-[#DDDDAA] mb-4">线索中断</h1>
+      <p class="font-mixed text-gray-300 leading-relaxed mb-8">
+        这页似乎被海雾吞没了。你要找的记录不在当前账册中，
+        让我们先回到甲板继续勘验吧。
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href={`${import.meta.env.BASE_URL}/`} class="btn-lg text-center">
+          返回首页
+        </a>
+        <a href={`${import.meta.env.BASE_URL}/about`} class="btn-lg text-center">
+          查看项目说明
+        </a>
+      </div>
+
+      <p class="mt-8 text-xs text-[#777766] font-mixed">
+        Return of the Obra Dinn fan utility · Not affiliated with Lucas Pope.
+      </p>
+    </section>
+  </main>
+</Layout>
