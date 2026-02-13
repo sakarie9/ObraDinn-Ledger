@@ -199,7 +199,11 @@ const preloadText = [
 </Layout>
 
 <script>
-  import { getHintState, updateHintState } from "../../scripts/store";
+  import {
+    getHintState,
+    updateHintState,
+    loadState,
+  } from "../../scripts/store";
   import type {
     HintState,
     FateStructure,
@@ -266,11 +270,11 @@ const preloadText = [
 
     // Dynamic items per page based on screen size
     get itemsPerPageCrew(): number {
-      return this.isMobile() ? 6 : 10;
+      return this.isMobile() ? 8 : 10;
     }
 
     get itemsPerPageFate(): number {
-      return this.isMobile() ? 6 : 9;
+      return this.isMobile() ? 8 : 9;
     }
 
     private isMobile(): boolean {
@@ -986,6 +990,15 @@ const preloadText = [
       if (!this.els.crewList) return;
       this.els.crewList.innerHTML = "";
 
+      // Get all verified crew IDs from storage
+      const verifiedCrewIds = new Set<number>();
+      const allStates = loadState();
+      Object.values(allStates).forEach((state: HintState) => {
+        if (state.status === "verified" && state.guessed_id) {
+          verifiedCrewIds.add(state.guessed_id);
+        }
+      });
+
       const sorted = [...this.crewList].sort((a, b) => a.id - b.id);
       const start = this.crewPageIdx * this.itemsPerPageCrew;
       const page = sorted.slice(start, start + this.itemsPerPageCrew);
@@ -999,7 +1012,11 @@ const preloadText = [
       for (const c of page) {
         const div = document.createElement("div");
         div.className = "crew-row";
-        div.innerHTML = `<span>${c.id}</span><span>${c.name}</span><span>${c.role}</span><span>${c.origin}</span>`;
+        const isVerified = verifiedCrewIds.has(c.id);
+        const nameStyle = isVerified
+          ? 'style="text-decoration: line-through; opacity: 0.6;"'
+          : "";
+        div.innerHTML = `<span>${c.id}</span><span ${nameStyle}>${c.name}</span><span ${nameStyle}>${c.role}</span><span ${nameStyle}>${c.origin}</span>`;
         div.setAttribute("data-crew-id", String(c.id));
         this.els.crewList.appendChild(div);
       }
