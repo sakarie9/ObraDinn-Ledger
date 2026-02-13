@@ -1054,15 +1054,17 @@ const preloadText = [
   import { resetFaceData } from "../../scripts/store";
 
   document.addEventListener("astro:page-load", () => {
+    if (!window.location.pathname.includes("/face/")) return;
+
     const resetBtn = document.getElementById("reset-btn");
     const faceInteraction = document.querySelector("face-interaction") as any;
 
     if (
       resetBtn &&
       faceInteraction &&
-      !resetBtn.hasAttribute("data-listener-attached")
+      !resetBtn.hasAttribute("data-face-reset-attached")
     ) {
-      resetBtn.setAttribute("data-listener-attached", "true");
+      resetBtn.setAttribute("data-face-reset-attached", "true");
 
       resetBtn.addEventListener("click", () => {
         if (

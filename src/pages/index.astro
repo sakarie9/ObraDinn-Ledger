@@ -134,6 +134,11 @@ const faces = Array.from({ length: 60 }, (_, i) => {
   });
 
   document.addEventListener("astro:page-load", () => {
+    const currentPath = window.location.pathname;
+    const isIndexPage =
+      currentPath === BASE_URL + "/" || currentPath === BASE_URL;
+    if (!isIndexPage) return;
+
     // Handle individual image loading
     const images = document.querySelectorAll(".face-card-img");
 
@@ -159,8 +164,8 @@ const faces = Array.from({ length: 60 }, (_, i) => {
 
     // Reset button
     const resetBtn = document.getElementById("reset-btn");
-    if (resetBtn && !resetBtn.hasAttribute("data-listener-attached")) {
-      resetBtn.setAttribute("data-listener-attached", "true");
+    if (resetBtn && !resetBtn.hasAttribute("data-index-reset-attached")) {
+      resetBtn.setAttribute("data-index-reset-attached", "true");
 
       resetBtn.addEventListener("click", () => {
         if (confirm("确定要清空所有身份推测和提示进度吗？(此操作不可撤销)")) {
