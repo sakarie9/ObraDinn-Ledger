@@ -32,10 +32,10 @@ async function convertAllImages() {
   }
 
   // 转换 icon.png
-  console.log("\n转换 icon.png...");
-  const iconInput = join(publicDir, "icon.png");
-  const iconOutput = join(publicDir, "icon.webp");
-  await convertPngToWebp(iconInput, iconOutput);
+  // console.log("\n转换 icon.png...");
+  // const iconInput = join(publicDir, "icon.png");
+  // const iconOutput = join(publicDir, "icon.webp");
+  // await convertPngToWebp(iconInput, iconOutput);
 }
 
 async function updateJsonFiles() {
