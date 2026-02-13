@@ -106,11 +106,14 @@ const preloadText = [
           <!-- Identity Hints -->
           <div class="hint-panel">
             <div class="hint-header">
-              <h2 class="hint-title">身份</h2>
+              <h2 class="hint-title">关于身份</h2>
               <button id="identity-hint-btn" class="btn">获取提示</button>
               <div id="identity-hint-done" class="hint-done">✓</div>
             </div>
             <div id="identity-hint-list" class="hint-list"></div>
+            <div id="identity-hint-empty" class="hint-empty">
+              点击“获取提示”按钮以显示提示
+            </div>
             <div id="identity-hint-msg" class="hint-msg">已显示所有提示</div>
           </div>
         </div>
@@ -132,11 +135,14 @@ const preloadText = [
           <!-- Fate Hints -->
           <div class="hint-panel">
             <div class="hint-header">
-              <h2 class="hint-title">下落</h2>
+              <h2 class="hint-title">关于下落</h2>
               <button id="fate-hint-btn" class="btn">获取提示</button>
               <div id="fate-hint-done" class="hint-done">✓</div>
             </div>
             <div id="fate-hint-list" class="hint-list"></div>
+            <div id="fate-hint-empty" class="hint-empty">
+              点击“获取提示”按钮以显示提示
+            </div>
             <div id="fate-hint-msg" class="hint-msg">已显示所有提示</div>
           </div>
         </div>
@@ -233,10 +239,12 @@ const preloadText = [
     idHintDone: HTMLElement | null;
     idHintList: HTMLElement | null;
     idHintMsg: HTMLElement | null;
+    idHintEmpty: HTMLElement | null;
     fateHintBtn: HTMLButtonElement | null;
     fateHintDone: HTMLElement | null;
     fateHintList: HTMLElement | null;
     fateHintMsg: HTMLElement | null;
+    fateHintEmpty: HTMLElement | null;
     crewModal: HTMLDialogElement | null;
     crewList: HTMLElement | null;
     crewTitle: HTMLElement | null;
@@ -373,10 +381,12 @@ const preloadText = [
         idHintDone: q("#identity-hint-done"),
         idHintList: q("#identity-hint-list"),
         idHintMsg: q("#identity-hint-msg"),
+        idHintEmpty: q("#identity-hint-empty"),
         fateHintBtn: q("#fate-hint-btn"),
         fateHintDone: q("#fate-hint-done"),
         fateHintList: q("#fate-hint-list"),
         fateHintMsg: q("#fate-hint-msg"),
+        fateHintEmpty: q("#fate-hint-empty"),
         crewModal: q("#crew-modal"),
         crewList: q("#crew-list"),
         crewTitle: q("#crew-modal-title"),
@@ -572,6 +582,7 @@ const preloadText = [
         isIdentity ? this.els.idHintBtn : this.els.fateHintBtn,
         isIdentity ? this.els.idHintDone : this.els.fateHintDone,
         isIdentity ? this.els.idHintMsg : this.els.fateHintMsg,
+        isIdentity ? this.els.idHintEmpty : this.els.fateHintEmpty,
         true, // Scroll when user clicks hint button
       );
       this.renderMobileBar();
@@ -763,6 +774,7 @@ const preloadText = [
         this.els.idHintBtn,
         this.els.idHintDone,
         this.els.idHintMsg,
+        this.els.idHintEmpty,
         false, // Don't scroll on initial render
       );
 
@@ -774,6 +786,7 @@ const preloadText = [
         this.els.fateHintBtn,
         this.els.fateHintDone,
         this.els.fateHintMsg,
+        this.els.fateHintEmpty,
         false, // Don't scroll on initial render
       );
     }
@@ -785,6 +798,7 @@ const preloadText = [
       btnEl: HTMLElement | null,
       doneEl: HTMLElement | null,
       msgEl: HTMLElement | null,
+      emptyEl: HTMLElement | null,
       shouldScroll = false,
     ): void {
       if (!listEl) return;
@@ -823,9 +837,11 @@ const preloadText = [
       }
 
       const isDone = count >= allHints.length;
+      const isEmpty = count === 0;
       if (btnEl) btnEl.classList.toggle("hidden", isDone);
       this.toggleVisible(doneEl, isDone);
       this.toggleVisible(msgEl, isDone);
+      if (emptyEl) emptyEl.classList.toggle("hidden", !isEmpty);
     }
 
     // Build mixed Chinese/English text using DOM nodes instead of innerHTML.

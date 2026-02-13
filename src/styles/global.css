@@ -378,6 +378,16 @@
 .hint-msg.visible {
   display: block;
 }
+.hint-empty {
+  text-align: center;
+  color: #aaaa88;
+  font-style: italic;
+  padding: 0.5rem 0;
+  font-family: var(--font-cn);
+}
+.hint-empty.hidden {
+  display: none;
+}
 
 /* ===== Modals ===== */
 
