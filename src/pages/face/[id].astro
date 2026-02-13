@@ -795,9 +795,11 @@ const preloadText = [
         // Single RAF after fonts are loaded is sufficient
         requestAnimationFrame(() => {
           listEl.scrollTop = listEl.scrollHeight;
-          // On mobile, scroll the page so the new hint is visible in viewport
-          const lastChild = listEl.lastElementChild as HTMLElement | null;
-          lastChild?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          // On mobile, scroll the page so the hint panel bottom is visible in viewport
+          const hintPanel = listEl.closest('.hint-panel') as HTMLElement | null;
+          if (hintPanel) {
+            hintPanel.scrollIntoView({ behavior: "smooth", block: "end" });
+          }
         });
       }
 
