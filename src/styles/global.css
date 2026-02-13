@@ -252,6 +252,12 @@
   position: relative;
   z-index: 10;
   margin: 0 0.75rem;
+  display: none; /* 移动端隐藏 */
+}
+@media (min-width: 768px) {
+  .check-btn {
+    display: block; /* 桌面端显示 */
+  }
 }
 #fate-check-btn {
   margin-left: auto;
