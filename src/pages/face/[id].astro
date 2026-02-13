@@ -164,20 +164,22 @@ const preloadText = [
             <button class="sidebar-btn" data-special-id="-1">敌人</button>
             <button class="sidebar-btn" data-special-id="-2">野兽</button>
           </div>
-          <div class="flex-1 flex flex-col min-h-0">
-            <div class="crew-header">
-              <span>编号</span><span>姓名</span><span>身份</span><span
-                >籍贯</span
-              >
-            </div>
-            <div id="crew-list" class="flex-1 overflow-y-auto min-h-0"></div>
+          <div class="flex-1 overflow-y-auto min-h-0 scrollbar-thin">
+            <table class="crew-table">
+              <thead>
+                <tr>
+                  <th class="crew-col-id">#</th>
+                  <th class="crew-col-name">姓名</th>
+                  <th class="crew-col-role">身份</th>
+                  <th class="crew-col-origin">籍贯</th>
+                </tr>
+              </thead>
+              <tbody id="crew-list"></tbody>
+            </table>
           </div>
         </div>
         <div class="modal-footer">
-          <button id="crew-prev" class="btn-lg">&lt;&lt;</button>
-          <span id="crew-page-info" class="self-center font-en">1 / 1</span>
-          <button id="crew-next" class="btn-lg">&gt;&gt;</button>
-          <button id="crew-cancel" class="btn-lg ml-4">取消</button>
+          <button id="crew-cancel" class="btn-lg">取消</button>
         </div>
       </div>
     </dialog>
@@ -186,12 +188,9 @@ const preloadText = [
     <dialog id="fate-modal" class="modal p-6">
       <div class="h-full flex flex-col">
         <h2 id="fate-modal-title" class="text-2xl font-bold mb-4">选择死因</h2>
-        <div id="fate-list" class="fate-grid"></div>
+        <div id="fate-list" class="fate-grid scrollbar-thin"></div>
         <div class="modal-footer">
-          <button id="fate-prev" class="btn-lg">&lt;&lt;</button>
-          <span id="fate-page-info" class="self-center font-en">1 / 1</span>
-          <button id="fate-next" class="btn-lg">&gt;&gt;</button>
-          <button id="fate-cancel" class="btn-lg ml-4">取消</button>
+          <button id="fate-cancel" class="btn-lg">取消</button>
         </div>
       </div>
     </dialog>
@@ -240,12 +239,10 @@ const preloadText = [
     fateHintMsg: HTMLElement | null;
     crewModal: HTMLDialogElement | null;
     crewList: HTMLElement | null;
-    crewPage: HTMLElement | null;
     crewTitle: HTMLElement | null;
     crewSidebar: HTMLElement | null;
     fateModal: HTMLDialogElement | null;
     fateList: HTMLElement | null;
-    fatePage: HTMLElement | null;
     fateTitle: HTMLElement | null;
     mobileHintBtn: HTMLButtonElement | null;
     mobileHintDone: HTMLElement | null;
@@ -264,23 +261,7 @@ const preloadText = [
     filename = "";
     currentFaceData: FaceHints | null = null;
     els = {} as CachedElements;
-    crewPageIdx = 0;
-    fatePageIdx = 0;
     crewMode: "identity" | "offender" = "identity";
-
-    // Dynamic items per page based on screen size
-    get itemsPerPageCrew(): number {
-      return this.isMobile() ? 8 : 10;
-    }
-
-    get itemsPerPageFate(): number {
-      return this.isMobile() ? 8 : 9;
-    }
-
-    private isMobile(): boolean {
-      // Match Tailwind's md breakpoint (768px)
-      return !window.matchMedia("(min-width: 768px)").matches;
-    }
 
     connectedCallback(): void {
       setTimeout(() => this.init(), 0);
@@ -302,23 +283,6 @@ const preloadText = [
 
         this.cacheElements();
         this.addEventListener("click", (e) => this.handleClick(e));
-
-        // Handle window resize for responsive pagination
-        let resizeTimeout: number;
-        window.addEventListener("resize", () => {
-          clearTimeout(resizeTimeout);
-          resizeTimeout = window.setTimeout(() => {
-            // Reset page index if modal is open to avoid out-of-bounds
-            if (this.els.crewModal?.open) {
-              this.crewPageIdx = 0;
-              this.renderCrewList();
-            }
-            if (this.els.fateModal?.open) {
-              this.fatePageIdx = 0;
-              this.renderFateList();
-            }
-          }, 150);
-        });
 
         // Preload fonts and load data in parallel.
         // preloadFonts() uses document.fonts.load() with ALL hint text to
@@ -415,12 +379,10 @@ const preloadText = [
         fateHintMsg: q("#fate-hint-msg"),
         crewModal: q("#crew-modal"),
         crewList: q("#crew-list"),
-        crewPage: q("#crew-page-info"),
         crewTitle: q("#crew-modal-title"),
         crewSidebar: q("#crew-sidebar"),
         fateModal: q("#fate-modal"),
         fateList: q("#fate-list"),
-        fatePage: q("#fate-page-info"),
         fateTitle: q("#fate-modal-title"),
         mobileHintBtn: q("#mobile-hint-btn"),
         mobileHintDone: q("#mobile-hint-done"),
@@ -532,25 +494,9 @@ const preloadText = [
         return;
       }
 
-      // Modal pagination
-      if (t.closest("#crew-prev")) {
-        this.pageCrewList(-1);
-        return;
-      }
-      if (t.closest("#crew-next")) {
-        this.pageCrewList(1);
-        return;
-      }
+      // Modal close
       if (t.closest("#crew-cancel")) {
         this.els.crewModal?.close();
-        return;
-      }
-      if (t.closest("#fate-prev")) {
-        this.pageFateList(-1);
-        return;
-      }
-      if (t.closest("#fate-next")) {
-        this.pageFateList(1);
         return;
       }
       if (t.closest("#fate-cancel")) {
@@ -1000,32 +946,14 @@ const preloadText = [
       });
 
       const sorted = [...this.crewList].sort((a, b) => a.id - b.id);
-      const start = this.crewPageIdx * this.itemsPerPageCrew;
-      const page = sorted.slice(start, start + this.itemsPerPageCrew);
-      const totalPages = Math.ceil(sorted.length / this.itemsPerPageCrew);
 
-      this.setText(
-        this.els.crewPage,
-        `${this.crewPageIdx + 1} / ${totalPages}`,
-      );
-
-      for (const c of page) {
-        const div = document.createElement("div");
-        div.className = "crew-row";
-        const isVerified = verifiedCrewIds.has(c.id);
-        const nameStyle = isVerified
-          ? 'style="text-decoration: line-through; opacity: 0.6;"'
-          : "";
-        div.innerHTML = `<span>${c.id}</span><span ${nameStyle}>${c.name}</span><span ${nameStyle}>${c.role}</span><span ${nameStyle}>${c.origin}</span>`;
-        div.setAttribute("data-crew-id", String(c.id));
-        this.els.crewList.appendChild(div);
+      for (const c of sorted) {
+        const tr = document.createElement("tr");
+        if (verifiedCrewIds.has(c.id)) tr.className = "verified";
+        tr.innerHTML = `<td>${c.id}</td><td>${c.name}</td><td>${c.role}</td><td>${c.origin}</td>`;
+        tr.setAttribute("data-crew-id", String(c.id));
+        this.els.crewList.appendChild(tr);
       }
-    }
-
-    pageCrewList(dir: number): void {
-      const total = Math.ceil(this.crewList.length / this.itemsPerPageCrew);
-      this.crewPageIdx = (this.crewPageIdx + dir + total) % total;
-      this.renderCrewList();
     }
 
     selectCrew(id: number): void {
@@ -1038,7 +966,6 @@ const preloadText = [
     }
 
     openFateModal(): void {
-      this.fatePageIdx = 0;
       this.setText(this.els.fateTitle, "选择死因");
       this.renderFateList();
       this.els.fateModal?.showModal();
@@ -1050,16 +977,8 @@ const preloadText = [
 
       const items = weapons || this.fatesList;
       const isWeapon = !!weapons;
-      const start = this.fatePageIdx * this.itemsPerPageFate;
-      const page = items.slice(start, start + this.itemsPerPageFate);
-      const totalPages = Math.ceil(items.length / this.itemsPerPageFate);
 
-      this.setText(
-        this.els.fatePage,
-        `${this.fatePageIdx + 1} / ${totalPages}`,
-      );
-
-      for (const item of page) {
+      for (const item of items) {
         const div = document.createElement("div");
         div.className = "fate-cell";
         div.textContent = isWeapon ? item : item.label;
@@ -1077,7 +996,6 @@ const preloadText = [
               s.guessed_fate.weapon = null;
             });
             if (item.has_weapon) {
-              this.fatePageIdx = 0;
               this.setText(this.els.fateTitle, item.label);
               this.renderFateList(item.weapons);
             } else {
@@ -1088,18 +1006,6 @@ const preloadText = [
         };
         this.els.fateList.appendChild(div);
       }
-    }
-
-    pageFateList(dir: number): void {
-      const title = this.els.fateTitle?.textContent;
-      const isCauses = title === "选择死因";
-      const items = isCauses
-        ? this.fatesList
-        : this.fatesList.find((c) => c.label === title)?.weapons || [];
-      const total = Math.ceil(items.length / this.itemsPerPageFate);
-      if (total === 0) return;
-      this.fatePageIdx = (this.fatePageIdx + dir + total) % total;
-      this.renderFateList(isCauses ? null : items);
     }
 
     // ===== DOM Helpers =====

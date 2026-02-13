@@ -365,6 +365,9 @@
   border: 2px solid var(--color-border-main);
   width: 90%;
   max-width: 800px;
+  /* Fixed height prevents pagination footer from jumping when page content
+     height varies across different pages */
+  height: 90vh;
   max-height: 90vh;
 }
 .modal::backdrop {
@@ -404,39 +407,70 @@
   color: var(--color-bg-main);
 }
 
-/* Crew list */
-.crew-header {
-  display: grid;
-  grid-template-columns: 50px 1fr 100px 1fr;
+/* Crew table */
+.crew-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--font-cn);
+  font-size: 1rem;
+  table-layout: fixed;
+}
+
+.crew-table thead th {
+  text-align: left;
   font-weight: bold;
+  padding: 0.5rem 0.5rem;
   border-bottom: 1px solid var(--color-border-main);
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
+  color: var(--color-border-main);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: var(--color-bg-main);
+  z-index: 1;
+}
+
+.crew-col-id {
+  width: 2rem;
+}
+.crew-col-name {
+  /* auto */
+}
+.crew-col-role {
+  width: 6rem;
+}
+.crew-col-origin {
+  width: 5rem;
 }
 @media (min-width: 768px) {
-  .crew-header {
-    font-size: 1rem;
+  .crew-col-id {
+    width: 2.5rem;
+  }
+  .crew-col-role {
+    width: 7rem;
+  }
+  .crew-col-origin {
+    width: 5.5rem;
   }
 }
 
-.crew-row {
-  display: grid;
-  grid-template-columns: 50px 1fr 100px 1fr;
-  padding: 0.5rem 0;
+.crew-table tbody tr {
   cursor: pointer;
-  border: 1px solid transparent;
-  font-family: var(--font-en);
-  font-size: 0.875rem;
+  transition: background-color 0.12s;
 }
-.crew-row:hover {
+.crew-table tbody tr:hover {
   background: var(--color-fg-main);
   color: var(--color-bg-main);
 }
-@media (min-width: 768px) {
-  .crew-row {
-    font-size: 1rem;
-  }
+.crew-table tbody td {
+  padding: 0.5rem 0.5rem;
+  border-bottom: 1px solid rgba(170, 170, 136, 0.15);
+  vertical-align: middle;
+}
+.crew-table tbody tr.verified td {
+  text-decoration: line-through;
+  opacity: 0.45;
 }
 
 /* Fate grid */
@@ -588,6 +622,12 @@ face-interaction {
     font-size: 0.875rem;
     text-align: center;
   }
+}
+
+/* Scrollbar utility */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-main) transparent;
 }
 
 /* ===== Animations ===== */
