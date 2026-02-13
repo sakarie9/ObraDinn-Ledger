@@ -43,10 +43,14 @@ const preloadText = [
     </div>
     <div class="flex flex-col gap-5 max-w-5xl mx-auto">
       <!-- Top Bar -->
-      <div>
+      <div class="flex justify-between items-center">
         <a href={`${import.meta.env.BASE_URL}/`} class="back-link"
           >&lt;&lt; 返回列表</a
         >
+        <h1 class="text-xl sm:text-2xl font-bold font-cn flex-1 text-center">
+          No. {id}
+        </h1>
+        <button id="reset-btn" class="btn-lg cursor-pointer">重置</button>
       </div>
 
       <!-- Main Interaction Area -->
@@ -796,7 +800,7 @@ const preloadText = [
         requestAnimationFrame(() => {
           listEl.scrollTop = listEl.scrollHeight;
           // On mobile, scroll the page so the hint panel bottom is visible in viewport
-          const hintPanel = listEl.closest('.hint-panel') as HTMLElement | null;
+          const hintPanel = listEl.closest(".hint-panel") as HTMLElement | null;
           if (hintPanel) {
             hintPanel.scrollIntoView({ behavior: "smooth", block: "end" });
           }
@@ -992,4 +996,20 @@ const preloadText = [
   if (!customElements.get("face-interaction")) {
     customElements.define("face-interaction", FaceInteraction);
   }
+
+  // Reset button functionality
+  import { resetData } from "../../scripts/store";
+
+  document.addEventListener("astro:page-load", () => {
+    const resetBtn = document.getElementById("reset-btn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        if (confirm("确定要清空所有身份推测和提示进度吗？(此操作不可撤销)")) {
+          resetData();
+          alert("所有进度已重置。");
+          window.location.href = `${import.meta.env.BASE_URL}/`;
+        }
+      });
+    }
+  });
 </script>
