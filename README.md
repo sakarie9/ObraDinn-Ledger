@@ -1,59 +1,65 @@
-# 《奥伯拉丁的回归》身份与下落提示与查验程序 (Web版)
+# 《奥伯拉丁的回归》身份与下落提示与查验程序 (Astro版)
 
-这是 [ObraDinn-HintsAndCheck](https://github.com/Yide-Zhang/ObraDinn-HintsAndCheck) 的网页移植版本。它帮助玩家游玩《奥伯拉丁的回归》，支持玩家获取提示并查证自己的答案。
+这是 [ObraDinn-HintsAndCheck](https://github.com/Yide-Zhang/ObraDinn-HintsAndCheck) 的重构版本，使用 **Astro** + **Tailwind CSS** 构建，并支持 **PWA** (渐进式 Web 应用)。
 
 ## 功能
 
-*   **完全的网页体验**：无需下载安装，直接在浏览器中运行。
-*   **获取提示**：点击“获取新提示”即可逐步获取身份和下落的线索。
+*   **完全的网页体验**：SPA 风格的流畅导航（使用 Astro View Transitions）。
+*   **PWA 支持**：可安装到桌面或手机，支持离线访问（缓存资源）。
+*   **获取提示**：点击“获取提示”逐步解锁线索。
 *   **查验答案**：
-    *   在详情页中选择身份和下落（包括死因、凶器、凶手）。
-    *   点击“查验”按钮检验答案是否正确。
-    *   正确答案会被锁定，且字体会从手写体变为打印体。
-*   **进度保存**：程序会自动保存你的推测和提示进度到浏览器的本地存储（LocalStorage），即使关闭页面也不会丢失。
+    *   交互式身份和下落选择器。
+    *   即时验证答案，正确答案自动锁定并显示。
+    *   错误答案会有震动反馈。
+*   **进度保存**：自动保存到浏览器 LocalStorage。
 *   **格式化**：支持一键重置所有进度。
 
-## 如何运行
+## 技术栈
 
-### 在线运行
+*   **框架**: [Astro](https://astro.build/)
+*   **样式**: [Tailwind CSS v4](https://tailwindcss.com/)
+*   **PWA**: [Vite PWA](https://vite-pwa-org.netlify.app/)
+*   **部署**: 静态站点生成 (SSG)，可部署到 GitHub Pages, Vercel, Netlify 等。
 
-本程序可以直接部署到 GitHub Pages 或任何静态网页托管服务。
+## 开发与构建
 
-### 本地运行
+### 安装依赖
 
-由于浏览器安全策略（CORS），直接双击打开 `index.html` 可能无法加载数据文件。你需要启动一个简单的本地 HTTP 服务器。
+```bash
+npm install
+```
 
-**方法 1: 使用 Python (已安装 Python 3)**
+### 启动开发服务器
 
-1.  在项目根目录下打开终端/命令行。
-2.  运行命令：
-    ```bash
-    python -m http.server
-    ```
-3.  在浏览器中访问 `http://localhost:8000`。
+```bash
+npm run dev
+```
+访问 `http://localhost:4321`。
 
-**方法 2: 使用 VS Code Live Server**
+### 构建生产版本
 
-1.  使用 VS Code 打开项目文件夹。
-2.  安装 "Live Server" 扩展。
-3.  右键点击 `index.html`，选择 "Open with Live Server"。
+```bash
+npm run build
+```
+构建产物位于 `dist/` 目录。
 
-## 部署到 GitHub Pages
+### 本地预览构建产物
 
-1.  Fork 本仓库或将代码上传到你的 GitHub 仓库。
-2.  进入仓库设置 (Settings) -> Pages。
-3.  在 "Build and deployment" 下的 Source 选择 "Deploy from a branch"。
-4.  Branch 选择 `main` (或 `master`)，文件夹选择 `/ (root)`。
-5.  点击 Save。
-6.  稍等片刻，GitHub 会生成访问链接。
+```bash
+npm run preview
+```
+
+## 部署
+
+本项目配置为静态站点。构建后的 `dist/` 目录包含所有静态文件，可以直接部署到任何静态托管服务。
 
 ## 致谢
 
 *   原作者：[Yide-Zhang](https://github.com/Yide-Zhang)
 *   字体：
-    *   IM Fell English (Google Fonts)
-    *   Noto Serif SC (Google Fonts)
-    *   Ma Shan Zheng (Google Fonts)
+    *   IM Fell English / Crimson Text
+    *   Noto Serif SC
+    *   Ma Shan Zheng
 
 ## 声明
 

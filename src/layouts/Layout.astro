@@ -1,0 +1,38 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="《奥伯拉丁的回归》身份与下落提示与查验程序" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- PWA -->
+    <meta name="theme-color" content="#333319" />
+    <link rel="apple-touch-icon" href="/icon.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet" />
+
+    <title>{title}</title>
+    <ClientRouter />
+  </head>
+  <body class="bg-[var(--color-bg-main)] text-[var(--color-fg-main)] font-cn flex justify-center min-h-screen">
+    <div id="app-container" class="w-full max-w-[1200px] p-5">
+      <slot />
+    </div>
+  </body>
+</html>

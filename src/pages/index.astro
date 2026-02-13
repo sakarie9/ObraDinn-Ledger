@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faces = Array.from({ length: 60 }, (_, i) => {
+  const num = (i + 1).toString().padStart(2, '0');
+  return `face_${num}.png`;
+});
+---
+
+<Layout title="奥伯拉丁的回归 - 身份与下落">
+  <div class="flex flex-col gap-5">
+    <!-- Header / Tools -->
+    <div class="flex justify-between items-center mb-5">
+      <h1 class="text-2xl font-bold font-cn hidden sm:block">身份与下落提示与查验程序</h1>
+      <button id="reset-btn" class="border border-[var(--color-fg-main)] px-4 py-2 hover:bg-[var(--color-fg-main)] hover:text-[var(--color-bg-main)] transition-colors cursor-pointer">
+        格式化
+      </button>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+      {faces.map((face, index) => (
+        <a href={`/face/${index + 1}`} class="block aspect-square relative group">
+          <div class="w-full h-full flex items-center justify-center border border-transparent hover:border-[var(--color-fg-main)] hover:shadow-[0_0_15px_rgba(229,254,255,0.3)] transition-all bg-black/20 p-2">
+            <img
+              src={`/FacesHi/${face}`}
+              alt={`Face ${index + 1}`}
+              class="max-w-full max-h-full object-contain transition-transform group-hover:scale-105"
+              loading="lazy"
+            />
+          </div>
+          <div class="absolute bottom-1 right-1 text-xs text-gray-400 font-en opacity-50">{index + 1}</div>
+        </a>
+      ))}
+    </div>
+
+    <div class="text-center text-sm text-[#AAAA88] mt-10">
+        <p>点击头像进入详情页</p>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { resetData } from '../scripts/store';
+
+  const resetBtn = document.getElementById('reset-btn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (confirm("确定要清空所有身份推测和提示进度吗？(此操作不可撤销)")) {
+        resetData();
+        alert("已初始化", "所有进度已重置。");
+        window.location.reload();
+      }
+    });
+  }
+</script>
