@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import AstroPWA from "@vite-pwa/astro";
 
 // 配置 base URL - 只需在此处修改
-const BASE_PATH = "/ObraDinn-HintsAndCheck";
+const BASE_PATH = "/ObraDinn-Ledger";
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,8 +18,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg"],
       manifest: {
-        name: "Return of the Obra Dinn - Hints & Check",
-        short_name: "Obra Dinn Hints",
+        name: "Return of the Obra Dinn - Ledger",
+        short_name: "Obra Dinn Ledger",
         description: "Helper tool for Return of the Obra Dinn",
         theme_color: "#333319",
         background_color: "#333319",
