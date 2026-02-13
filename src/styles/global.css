@@ -171,7 +171,8 @@
 }
 @media (min-width: 768px) {
   .widget {
-    width: 33.333%;
+    min-height: 4rem;
+    height: auto;
   }
 }
 .widget[data-verified] {
@@ -206,12 +207,23 @@
   background: transparent;
 }
 #identity-content {
-  justify-content: flex-end;
-  text-align: right;
+  justify-content: center;
+  text-align: center;
 }
 #fate-content {
-  justify-content: flex-start;
-  text-align: left;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  #identity-content {
+    justify-content: flex-end;
+    text-align: right;
+  }
+  #fate-content {
+    justify-content: flex-start;
+    text-align: left;
+  }
 }
 
 .widget-label {
