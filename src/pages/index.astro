@@ -52,6 +52,7 @@ const faces = Array.from({ length: 60 }, (_, i) => {
             <div class="face-check" aria-hidden="true">
               ✓
             </div>
+            <div class="face-name" aria-hidden="true" />
             <div class="absolute bottom-1 right-1 text-sm font-semibold text-gray-300 font-en opacity-70">
               {index + 1}
             </div>
@@ -96,7 +97,8 @@ const faces = Array.from({ length: 60 }, (_, i) => {
             href={`https://github.com/sakarie9/ObraDinn-Ledger/commit/${commitHash}`}
             target="_blank"
             rel="noopener noreferrer"
-            class="hover:text-[#DDDDAA] transition-colors">{commitHash}</a>
+            class="hover:text-[#DDDDAA] transition-colors">{commitHash}</a
+          >
         </p>
         <p class="text-[#777766]">
           游戏资源版权归 Lucas Pope 所有 • 本项目仅供学习交流使用
@@ -108,6 +110,7 @@ const faces = Array.from({ length: 60 }, (_, i) => {
 
 <script>
   import { resetData, loadState } from "../scripts/store";
+  import { loadData, getCrew } from "../scripts/data";
 
   const SCROLL_KEY = "index-scroll-position";
   const BASE_URL = import.meta.env.BASE_URL;
@@ -139,7 +142,7 @@ const faces = Array.from({ length: 60 }, (_, i) => {
     }
   });
 
-  document.addEventListener("astro:page-load", () => {
+  document.addEventListener("astro:page-load", async () => {
     const currentPath = window.location.pathname;
     const isIndexPage =
       currentPath === BASE_URL + "/" || currentPath === BASE_URL;
@@ -182,13 +185,33 @@ const faces = Array.from({ length: 60 }, (_, i) => {
       });
     }
 
-    // Show checkmarks on fully verified faces
+    // Show verified identity names on cards
+    await loadData();
+    const crewMap = new Map((getCrew() || []).map((c) => [c.id, c.name]));
+
     const state = loadState();
     for (const [filename, s] of Object.entries(state)) {
+      const link = document.querySelector(`[data-face="${filename}"]`);
+      const check = link?.querySelector(".face-check");
+      const nameBadge = link?.querySelector(".face-name");
+      if (!check || !nameBadge) continue;
+
+      // Reset classes/text first (safe for repeated page-load hooks)
+      check.classList.remove("visible");
+      nameBadge.classList.remove("visible");
+      nameBadge.textContent = "";
+
+      if (s.status === "verified") {
+        const name = s.guessed_id ? crewMap.get(s.guessed_id) : null;
+        if (name) {
+          nameBadge.textContent = name;
+          nameBadge.classList.add("visible");
+        }
+      }
+
+      // Fully verified: additionally show top-left checkmark
       if (s.status === "verified" && s.fate_status === "verified") {
-        const link = document.querySelector(`[data-face="${filename}"]`);
-        const check = link?.querySelector(".face-check");
-        if (check) check.classList.add("visible");
+        check.classList.add("visible");
       }
     }
   });

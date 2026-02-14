@@ -189,6 +189,29 @@
   display: flex;
 }
 
+/* Name badge for identity-verified faces */
+.face-name {
+  display: none;
+  position: absolute;
+  left: 0.25rem;
+  bottom: 0.25rem;
+  max-width: calc(100% - 0.5rem);
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  background: rgba(229, 254, 255, 0.95);
+  color: var(--color-bg-main);
+  font-size: 0.85rem;
+  line-height: 1.2;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+.face-name.visible {
+  display: block;
+}
+
 /* ===== Face Detail Page ===== */
 
 .back-link {
