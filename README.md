@@ -14,6 +14,12 @@
 - **一键重置** — 支持清空全部进度重新开始。
 - **PWA 支持** — 可安装到桌面或移动设备，支持离线访问。
 
+## 预览
+
+![preview-1](./assets/preview-1.webp)
+
+![preview-2](./assets/preview-2.webp)
+
 ## 开发
 
 ### 前置条件
