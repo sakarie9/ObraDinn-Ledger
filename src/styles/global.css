@@ -264,14 +264,29 @@
 #fate-content {
   justify-content: center;
   text-align: center;
+  flex-wrap: wrap;
+  column-gap: 0.25rem;
 }
 
 @media (min-width: 768px) {
+  #fate-widget {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
   #identity-content {
     justify-content: flex-end;
     text-align: right;
   }
   #fate-content {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    min-width: 0;
     justify-content: flex-start;
     text-align: left;
   }
@@ -280,6 +295,8 @@
 .widget-label {
   font-size: 1.25rem;
   font-family: var(--font-cn);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .widget[data-verified] .widget-label {
   font-weight: bold;
@@ -299,6 +316,13 @@
 #fate-check-btn {
   margin-left: auto;
 }
+@media (min-width: 768px) {
+  #fate-check-btn {
+    margin: 0 0.75rem 0 0;
+    justify-self: end;
+    flex-shrink: 0;
+  }
+}
 .widget[data-verified] .check-btn {
   display: none !important;
 }
@@ -310,6 +334,8 @@
   margin-left: 0.25rem;
   text-decoration: underline;
   cursor: pointer;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .offender-label:hover {
   color: white;
