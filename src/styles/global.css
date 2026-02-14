@@ -151,6 +151,8 @@
 }
 
 .face-card-img {
+  width: 100%;
+  height: 100%;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
@@ -166,6 +168,13 @@
 
 .face-card:hover .face-card-img {
   transform: scale(1.05);
+}
+
+@media (max-width: 767px) {
+  .face-card {
+    padding: 0.2rem;
+    border-width: 1px;
+  }
 }
 
 /* Checkmark overlay for verified faces */
@@ -210,6 +219,54 @@
 }
 .face-name.visible {
   display: block;
+}
+
+/* Face index badge (top-right) */
+.face-index {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.2rem;
+  z-index: 20;
+  font-family: var(--font-en);
+  font-size: 0.72rem;
+  line-height: 1;
+  font-weight: 600;
+  color: rgba(229, 254, 255, 0.68);
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.9),
+    0 0 1px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .face-index {
+    top: 0.3rem;
+    right: 0.3rem;
+    font-size: 0.86rem;
+    color: rgba(229, 254, 255, 0.78);
+  }
+}
+
+@media (max-width: 767px) {
+  .face-name {
+    display: none;
+    left: 0.15rem;
+    right: 0.15rem;
+    max-width: none;
+    padding: 0.08rem 0.22rem;
+    font-size: 0.7rem;
+    line-height: 1.08;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: clip;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .face-name.visible {
+    display: -webkit-box;
+  }
 }
 
 /* ===== Face Detail Page ===== */
