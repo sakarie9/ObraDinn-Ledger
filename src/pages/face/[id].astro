@@ -969,7 +969,9 @@ const preloadText = [
 
       for (const c of sorted) {
         const tr = document.createElement("tr");
-        if (verifiedCrewIds.has(c.id)) tr.className = "verified";
+        if (this.crewMode === "identity" && verifiedCrewIds.has(c.id)) {
+          tr.className = "verified";
+        }
         tr.innerHTML = `<td>${c.id}</td><td>${c.name}</td><td>${c.role}</td><td>${c.origin}</td>`;
         tr.setAttribute("data-crew-id", String(c.id));
         this.els.crewList.appendChild(tr);
@@ -991,33 +993,50 @@ const preloadText = [
       this.els.fateModal?.showModal();
     }
 
-    renderFateList(weapons: string[] | null = null): void {
+    renderFateList(
+      weapons: string[] | null = null,
+      selectedCause: FateStructure | null = null,
+    ): void {
       if (!this.els.fateList) return;
       this.els.fateList.innerHTML = "";
 
-      const items = weapons || this.fatesList;
       const isWeapon = !!weapons;
+      const items = isWeapon ? weapons : this.fatesList;
 
       for (const item of items) {
         const div = document.createElement("div");
         div.className = "fate-cell";
-        div.textContent = isWeapon ? item : item.label;
+        div.textContent = isWeapon
+          ? (item as string)
+          : (item as FateStructure).label;
 
         div.onclick = () => {
           if (isWeapon) {
+            const weapon = item as string;
             updateHintState(this.filename, (s) => {
-              s.guessed_fate.weapon = item;
+              s.guessed_fate.weapon = weapon;
             });
             this.els.fateModal?.close();
             this.render();
+
+            // If this cause needs an offender, jump directly to offender selection.
+            if (selectedCause?.requires_offender) {
+              this.openCrewModal("offender");
+            }
           } else {
+            const cause = item as FateStructure;
             updateHintState(this.filename, (s) => {
-              s.guessed_fate.cause_id = item.id;
+              s.guessed_fate.cause_id = cause.id;
               s.guessed_fate.weapon = null;
             });
-            if (item.has_weapon) {
-              this.setText(this.els.fateTitle, item.label);
-              this.renderFateList(item.weapons);
+
+            if (cause.has_weapon) {
+              this.setText(this.els.fateTitle, cause.label);
+              this.renderFateList(cause.weapons, cause);
+            } else if (cause.requires_offender) {
+              this.els.fateModal?.close();
+              this.render();
+              this.openCrewModal("offender");
             } else {
               this.els.fateModal?.close();
               this.render();
